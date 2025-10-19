@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 222 156" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Object">
+<path id="Border" fill-rule="evenodd" clip-rule="evenodd" d="M5.04249 8.93492L0.803947 146.503C0.734557 148.755 1.58262 150.94 3.15473 152.559C4.72685 154.177 6.88896 155.091 9.14799 155.093H212.19C216.801 155.088 220.538 151.359 220.543 146.759V9.19092C220.543 4.58802 216.803 0.856641 212.19 0.856641H13.3865C8.87304 0.854667 5.17615 4.43381 5.04249 8.93492V8.93492Z" stroke="var(--stroke-0, #000001)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Border_2" fill-rule="evenodd" clip-rule="evenodd" d="M212.209 0.800001H13.6736C9.16844 0.797961 5.47732 4.29404 5.34018 8.69305L4.81406 25.452L220.543 21.2485V8.95003C220.545 6.78935 219.668 4.71634 218.105 3.18765C216.542 1.65895 214.421 0.8 212.209 0.800001Z" stroke="var(--stroke-0, #000001)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse id="Dark" cx="19.0887" cy="13.1261" rx="2.91756" ry="2.91083" fill="var(--fill-0, #102030)"/>
+<ellipse id="Dark_2" cx="35.3105" cy="13.1261" rx="2.91756" ry="2.91083" fill="var(--fill-0, #102030)"/>
+<ellipse id="Dark_3" cx="51.5332" cy="13.1261" rx="2.91756" ry="2.91083" fill="var(--fill-0, #102030)"/>
+</g>
+</svg>

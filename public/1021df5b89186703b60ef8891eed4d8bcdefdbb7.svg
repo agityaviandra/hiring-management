@@ -1,0 +1,8 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 18 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Eyes">
+<path id="Path" d="M0.800007 0.937103L5.33321 0.800007" stroke="var(--stroke-0, #000001)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Path_2" d="M12.8233 0.933994L16.6271 0.933994" stroke="var(--stroke-0, #000001)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse id="Dark" cx="2.95853" cy="4.86743" rx="0.87328" ry="1.57986" fill="var(--fill-0, #102030)"/>
+<ellipse id="Dark_2" cx="14.7266" cy="4.90973" rx="0.87328" ry="1.57986" fill="var(--fill-0, #102030)"/>
+</g>
+</svg>

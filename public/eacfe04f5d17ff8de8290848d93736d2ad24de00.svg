@@ -1,0 +1,9 @@
+<svg preserveAspectRatio="none" width="100%" height="100%" overflow="visible" style="display: block;" viewBox="0 0 108 55" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Object">
+<path id="White" fill-rule="evenodd" clip-rule="evenodd" d="M10.291 0.8L0.800006 54.0941H99.5821L106.995 0.8H10.291V0.8Z" fill="var(--fill-0, white)"/>
+<path id="Border" fill-rule="evenodd" clip-rule="evenodd" d="M10.291 0.8L0.800006 54.0941H99.5821L106.995 0.8H10.291V0.8Z" stroke="var(--stroke-0, #000001)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+<ellipse id="Dark" cx="33.3545" cy="27.7109" rx="3.31937" ry="3.31172" fill="var(--fill-0, #102030)"/>
+<ellipse id="Dark_2" cx="52.9139" cy="27.7109" rx="3.31938" ry="3.31172" fill="var(--fill-0, #102030)"/>
+<ellipse id="Dark_3" cx="72.3874" cy="27.7109" rx="3.31938" ry="3.31172" fill="var(--fill-0, #102030)"/>
+</g>
+</svg>
