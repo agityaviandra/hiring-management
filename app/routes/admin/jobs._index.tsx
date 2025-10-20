@@ -17,16 +17,18 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { jobsStorage } from "~/utils/storage";
 import { useAuthStore } from "~/stores/useAuthStore";
-import { type Job, type JobStatus } from "~/types";
+import { type JobListItem, type JobStatus } from "~/types";
 
 export default function AdminJobsPage() {
-    const [jobs, setJobs] = useState<Job[]>([]);
+    const [jobs, setJobs] = useState<JobListItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [searchQuery, setSearchQuery] = useState("");
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const navigate = useNavigate();
     const { user, logout } = useAuthStore();
     const [dropdownContainer, setDropdownContainer] = useState<HTMLElement | null>(null);
+
+    console.log(jobs);
 
     const handleLogout = () => {
         logout();
@@ -42,7 +44,7 @@ export default function AdminJobsPage() {
     useEffect(() => {
         const loadJobs = () => {
             const allJobs = jobsStorage.getAll();
-            setJobs(allJobs);
+            setJobs(allJobs.data);
             setIsLoading(false);
         };
 
@@ -51,13 +53,11 @@ export default function AdminJobsPage() {
 
     const refreshJobs = () => {
         const allJobs = jobsStorage.getAll();
-        setJobs(allJobs);
+        setJobs(allJobs.data);
     };
 
-    const filteredJobs = jobs.filter(job =>
-        job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.location.toLowerCase().includes(searchQuery.toLowerCase())
+    const filteredJobs = jobs?.filter(job =>
+        job?.title?.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     if (isLoading) {
@@ -131,7 +131,7 @@ export default function AdminJobsPage() {
                         </div>
 
                         {/* Job List or Empty State */}
-                        {filteredJobs.length === 0 ? (
+                        {filteredJobs.length === 0 || jobs.length === 0 ? (
                             <EmptyState
                                 title="No job openings available"
                                 description="Create a job opening now and start the candidate process."

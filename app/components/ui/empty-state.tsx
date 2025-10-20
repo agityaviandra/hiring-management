@@ -8,7 +8,7 @@ export interface EmptyStateProps {
     illustration?: string;
     title: string;
     description: string;
-    actionText: string;
+    actionText?: string;
     actionOnClick?: () => void;
     actionVariant?: "default" | "alternative-primary" | "outline";
     actionSize?: "default" | "sm" | "lg" | "icon";
@@ -46,14 +46,16 @@ const EmptyState = React.forwardRef<HTMLDivElement, EmptyStateProps>(
 
                 {/* Empty State Text */}
                 <div className="text-center space-y-1">
-                    <h2 className="heading-s-bold text-neutral-100">{title}</h2>
-                    <p className="text-l-regular text-neutral-70">{description}</p>
+                    <h2 className={`${actionText ? "heading-s-bold text-neutral-100 " : "text-l-bold text-neutral-100 mb-2"}`}>{title}</h2>
+                    <p className={`${actionText ? "text-l-regular text-neutral-70" : "text-m-regular text-neutral-70"}`}>{description}</p>
                 </div>
 
                 {/* CTA Button */}
-                <Button onClick={actionOnClick} variant={actionVariant} size={actionSize}>
-                    {actionText}
-                </Button>
+                {actionText && (
+                    <Button onClick={actionOnClick} variant={actionVariant} size={actionSize}>
+                        {actionText}
+                    </Button>
+                )}
             </div>
         );
     }

@@ -59,7 +59,7 @@ export function JobCard({ job }: JobCardProps) {
                     {/* Start Date Badge */}
                     <div className="border border-neutral-40 border-solid box-border flex gap-2 items-center px-4 py-1 relative rounded shrink-0">
                         <p className="font-normal leading-6 relative shrink-0 text-sm text-neutral-70 text-nowrap whitespace-pre">
-                            started on {new Date(job.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                            started on {job.list_card.started_on_text}
                         </p>
                     </div>
                 </div>
@@ -76,13 +76,13 @@ export function JobCard({ job }: JobCardProps) {
                         {/* Salary Range */}
                         <div className="flex font-normal gap-1 items-start leading-7 relative shrink-0 text-neutral-80 text-base text-nowrap whitespace-pre">
                             <p className="relative shrink-0">
-                                Rp{job.salaryMin.toLocaleString('id-ID')}
+                                Rp{job.salary_range.min.toLocaleString('id-ID')}
                             </p>
                             <p className="relative shrink-0">
                                 -
                             </p>
                             <p className="relative shrink-0">
-                                Rp{job.salaryMax.toLocaleString('id-ID')}
+                                Rp{job.salary_range.max.toLocaleString('id-ID')}
                             </p>
                         </div>
                     </div>

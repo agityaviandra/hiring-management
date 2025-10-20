@@ -11,27 +11,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "~/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { toast } from "~/components/ui/toast";
-import { jobsStorage } from "~/utils/storage";
-import { type Job, type ApplicationField, STANDARD_FIELDS, type FieldVisibility } from "~/types";
+import { jobsStorage, jobConfigStorage } from "~/utils/storage";
+import { type JobListItem, type ApplicationField, type FieldVisibility, STANDARD_FIELDS } from "~/types";
+import { jobSchema, type JobFormData } from "~/lib/validations/job-form";
 
-const jobSchema = z.object({
-    title: z.string().min(1, "Job title is required").max(100, "Title must be less than 100 characters"),
-    jobType: z.string().min(1, "Job type is required"),
-    description: z.string().min(1, "Job description is required").max(2000, "Description must be less than 2000 characters"),
-    candidateCount: z.number().min(1, "Number of candidates must be at least 1"),
-    salaryMin: z.number().min(0, "Minimum salary must be positive"),
-    salaryMax: z.number().min(0, "Maximum salary must be positive"),
-}).refine((data) => data.salaryMax >= data.salaryMin, {
-    message: "Maximum salary must be greater than or equal to minimum salary",
-    path: ["salaryMax"],
-});
 
-type JobFormData = z.infer<typeof jobSchema>;
 
 interface CreateJobModalProps {
     isOpen: boolean;
     onClose: () => void;
-    jobToEdit?: Job;
+    jobToEdit?: JobListItem;
     onJobSaved?: () => void;
 }
 
@@ -39,30 +28,24 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
     const navigate = useNavigate();
     const [applicationFields, setApplicationFields] = useState<ApplicationField[]>(() => {
         if (jobToEdit) {
-            return jobToEdit.applicationFields;
+            // Get the job configuration to load the fields
+            const config = jobConfigStorage.get(jobToEdit.id);
+            return config?.application_form.sections[0]?.fields || STANDARD_FIELDS;
         }
-        // Initialize with standard fields as optional
-        return STANDARD_FIELDS.map((field, index) => ({
-            id: crypto.randomUUID(),
-            fieldName: field.fieldName,
-            fieldType: field.fieldType,
-            label: field.label,
-            placeholder: field.placeholder,
-            validation: field.validation,
-            visibility: 'optional' as FieldVisibility,
-            order: index,
-        }));
+        // Initialize with standard fields
+        return STANDARD_FIELDS;
     });
+    const [profilePicture, setProfilePicture] = useState<string>("");
 
     const form = useForm<JobFormData>({
         resolver: zodResolver(jobSchema),
         defaultValues: jobToEdit ? {
             title: jobToEdit.title,
             jobType: "full-time",
-            description: jobToEdit.description,
+            description: "", // We'll need to add description to JobListItem if needed
             candidateCount: undefined,
-            salaryMin: undefined,
-            salaryMax: undefined,
+            salaryMin: jobToEdit.salary_range.min,
+            salaryMax: jobToEdit.salary_range.max,
         } : {
             title: "",
             jobType: "",
@@ -75,27 +58,64 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
 
     const onSubmit = async (data: JobFormData) => {
         try {
-            const jobData = {
-                title: data.title,
-                description: data.description,
-                location: "Remote", // Default location for now
-                salaryMin: data.salaryMin,
-                salaryMax: data.salaryMax,
-                status: 'draft' as const,
-                applicationFields: applicationFields.sort((a, b) => a.order - b.order),
+            // Create slug from title
+            const slug = data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+
+            // Format salary display text
+            const formatSalary = (amount: number) => {
+                return `Rp${amount.toLocaleString('id-ID')}`;
             };
 
+            const jobData = {
+                slug,
+                title: data.title,
+                status: 'draft' as const,
+                salary_range: {
+                    min: data.salaryMin,
+                    max: data.salaryMax,
+                    currency: 'IDR',
+                    display_text: `${formatSalary(data.salaryMin)} - ${formatSalary(data.salaryMax)}`
+                },
+                list_card: {
+                    badge: 'Draft',
+                    started_on_text: `started on ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`,
+                    cta: 'Manage Job'
+                }
+            };
+
+            let savedJob: JobListItem;
             if (jobToEdit) {
-                jobsStorage.update(jobToEdit.id, jobData);
+                const updatedJob = jobsStorage.update(jobToEdit.id, jobData);
+                if (!updatedJob) throw new Error('Failed to update job');
+                savedJob = updatedJob;
                 toast.success({
                     title: "Job vacancy successfully updated",
                 });
             } else {
-                jobsStorage.create(jobData);
+                savedJob = jobsStorage.create(jobData);
                 toast.success({
                     title: "Job vacancy successfully created",
                 });
             }
+
+            // Save the job configuration - convert visibility to backend format
+            const backendFields = applicationFields.map(field => ({
+                key: field.key,
+                validation: {
+                    required: field.validation.visibility === 'mandatory'
+                }
+            }));
+
+            jobConfigStorage.set(savedJob.id, {
+                application_form: {
+                    sections: [
+                        {
+                            title: "Minimum Profile Information Required",
+                            fields: backendFields
+                        }
+                    ]
+                }
+            });
 
             // Refresh the jobs list in the parent component
             if (onJobSaved) {
@@ -114,17 +134,30 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
         }
     };
 
-    const handleFieldVisibilityChange = (fieldId: string, visibility: FieldVisibility) => {
+    const handleFieldVisibilityChange = (fieldKey: string, visibility: FieldVisibility) => {
         setApplicationFields(prev =>
             prev.map(field =>
-                field.id === fieldId ? { ...field, visibility } : field
+                field.key === fieldKey ? {
+                    ...field,
+                    validation: {
+                        required: visibility === 'mandatory',
+                        visibility
+                    }
+                } : field
             )
         );
     };
 
     const getVisibilityColor = (visibility: FieldVisibility) => {
-        if (visibility) {
-            return 'bg-white border-primary-main text-primary-main';
+        switch (visibility) {
+            case 'mandatory':
+                return 'bg-white border-primary-main text-primary-main';
+            case 'optional':
+                return 'bg-white border-primary-main text-primary-main';
+            case 'hidden':
+                return 'bg-neutral-20 border-neutral-40 text-neutral-70';
+            default:
+                return 'bg-neutral-20 border-neutral-40 text-neutral-70';
         }
     };
 
@@ -327,9 +360,9 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
 
                             <div className="space-y-2">
                                 {applicationFields.map((field) => (
-                                    <div key={field.id} className="flex items-center justify-between p-2 border-b border-neutral-30 last:border-b-0">
+                                    <div key={field.key} className="flex items-center justify-between p-2 border-b border-neutral-30 last:border-b-0">
                                         <div className="flex-1">
-                                            <p className="text-m-regular text-neutral-70">{field.label}</p>
+                                            <p className="text-m-regular text-neutral-70">{field.key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
                                         </div>
 
                                         <div className="flex gap-2">
@@ -337,10 +370,15 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                                                 <Button
                                                     key={visibility}
                                                     type="button"
+                                                    disabled={
+                                                        ['full_name', 'photo_profile', 'email'].includes(field.key)
+                                                            ? visibility === 'optional' || visibility === 'hidden'
+                                                            : false
+                                                    }
                                                     variant="outline"
                                                     size="sm"
-                                                    onClick={() => handleFieldVisibilityChange(field.id, visibility)}
-                                                    className={`px-3 py-1 text-xs rounded-full ${field.visibility === visibility
+                                                    onClick={() => handleFieldVisibilityChange(field.key, visibility)}
+                                                    className={`px-3 py-1 text-xs rounded-full ${field.validation.visibility === visibility
                                                         ? getVisibilityColor(visibility)
                                                         : 'bg-neutral-20 border-neutral-40 text-neutral-70'
                                                         }`}

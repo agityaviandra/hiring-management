@@ -1,49 +1,58 @@
-import { type Job, type Application } from '~/types';
+import {
+    type JobListItem,
+    type JobListResponse,
+    type JobConfiguration,
+    type Candidate,
+    type CandidateListResponse,
+    type ApplicationField,
+    type Application,
+    STANDARD_FIELDS
+} from '~/types';
 
 // In a real application, these would be API calls
 // For now, we'll use localStorage for persistence
 
 const JOBS_KEY = 'hiring-app-jobs';
+const JOB_CONFIG_KEY = 'hiring-app-job-config';
 const APPLICATIONS_KEY = 'hiring-app-applications';
+const CANDIDATES_KEY = 'hiring-app-candidates';
 
 // Jobs storage
 export const jobsStorage = {
-    getAll: (): Job[] => {
-        if (typeof window === 'undefined') return [];
+    getAll: (): JobListResponse => {
+        if (typeof window === 'undefined') return { data: [] };
         const data = localStorage.getItem(JOBS_KEY);
-        return data ? JSON.parse(data) : [];
+        return data ? JSON.parse(data) : { data: [] };
     },
 
-    getById: (id: string): Job | undefined => {
+    getById: (id: string): JobListItem | undefined => {
         const jobs = jobsStorage.getAll();
-        return jobs.find(job => job.id === id);
+        return jobs.data?.find(job => job.id === id);
     },
 
-    create: (job: Omit<Job, 'id' | 'createdAt' | 'updatedAt'>): Job => {
+    create: (jobData: Omit<JobListItem, 'id'>): JobListItem => {
         const jobs = jobsStorage.getAll();
-        const newJob: Job = {
-            ...job,
-            id: crypto.randomUUID(),
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+        const newJob: JobListItem = {
+            ...jobData,
+            id: `job_${new Date().toISOString().slice(0, 10).replace(/-/g, '')}_${String(jobs.data.length + 1).padStart(4, '0')}`,
         };
 
-        const updatedJobs = [...jobs, newJob];
+        const updatedJobs = { data: [...jobs.data, newJob] };
         localStorage.setItem(JOBS_KEY, JSON.stringify(updatedJobs));
 
         // Create sample applications for the first job
-        if (jobs.length === 0) {
+        if (jobs.data.length === 0) {
             const sampleApplications: Application[] = [
                 {
                     id: 'app-1',
                     jobId: newJob.id,
                     applicantEmail: 'john.doe@example.com',
                     fieldData: {
-                        fullName: 'John Doe',
-                        phone: '+1 (555) 123-4567',
-                        linkedin: 'https://linkedin.com/in/johndoe',
-                        yearsOfExperience: '5',
-                        coverLetter: 'I am excited to apply for this position...'
+                        full_name: 'John Doe',
+                        phone_number: '+1 (555) 123-4567',
+                        linkedin_link: 'https://linkedin.com/in/johndoe',
+                        domicile: 'Jakarta',
+                        gender: 'Male'
                     },
                     status: 'pending',
                     submittedAt: new Date().toISOString()
@@ -53,11 +62,11 @@ export const jobsStorage = {
                     jobId: newJob.id,
                     applicantEmail: 'jane.smith@example.com',
                     fieldData: {
-                        fullName: 'Jane Smith',
-                        phone: '+1 (555) 987-6543',
-                        linkedin: 'https://linkedin.com/in/janesmith',
-                        yearsOfExperience: '3',
-                        coverLetter: 'I have extensive experience in...'
+                        full_name: 'Jane Smith',
+                        phone_number: '+1 (555) 987-6543',
+                        linkedin_link: 'https://linkedin.com/in/janesmith',
+                        domicile: 'Bandung',
+                        gender: 'Female'
                     },
                     status: 'reviewed',
                     submittedAt: new Date(Date.now() - 86400000).toISOString() // 1 day ago
@@ -67,11 +76,11 @@ export const jobsStorage = {
                     jobId: newJob.id,
                     applicantEmail: 'mike.wilson@example.com',
                     fieldData: {
-                        fullName: 'Mike Wilson',
-                        phone: '+1 (555) 456-7890',
-                        linkedin: 'https://linkedin.com/in/mikewilson',
-                        yearsOfExperience: '7',
-                        coverLetter: 'I am passionate about...'
+                        full_name: 'Mike Wilson',
+                        phone_number: '+1 (555) 456-7890',
+                        linkedin_link: 'https://linkedin.com/in/mikewilson',
+                        domicile: 'Surabaya',
+                        gender: 'Male'
                     },
                     status: 'shortlisted',
                     submittedAt: new Date(Date.now() - 172800000).toISOString() // 2 days ago
@@ -84,35 +93,113 @@ export const jobsStorage = {
         return newJob;
     },
 
-    update: (id: string, updates: Partial<Omit<Job, 'id' | 'createdAt'>>): Job | null => {
+    update: (id: string, updates: Partial<Omit<JobListItem, 'id'>>): JobListItem | null => {
         const jobs = jobsStorage.getAll();
-        const index = jobs.findIndex(job => job.id === id);
+        const index = jobs.data.findIndex(job => job.id === id);
 
         if (index === -1) return null;
 
-        const updatedJob: Job = {
-            ...jobs[index],
+        const updatedJob: JobListItem = {
+            ...jobs.data[index],
             ...updates,
-            updatedAt: new Date().toISOString(),
         };
 
-        jobs[index] = updatedJob;
+        jobs.data[index] = updatedJob;
         localStorage.setItem(JOBS_KEY, JSON.stringify(jobs));
         return updatedJob;
     },
 
     delete: (id: string): boolean => {
         const jobs = jobsStorage.getAll();
-        const filteredJobs = jobs.filter(job => job.id !== id);
+        const filteredJobs = { data: jobs.data.filter(job => job.id !== id) };
 
-        if (filteredJobs.length === jobs.length) return false;
+        if (filteredJobs.data.length === jobs.data.length) return false;
 
         localStorage.setItem(JOBS_KEY, JSON.stringify(filteredJobs));
         return true;
     },
 };
 
-// Applications storage
+// Job Configuration storage
+export const jobConfigStorage = {
+    get: (jobId: string): JobConfiguration | null => {
+        if (typeof window === 'undefined') return null;
+        const data = localStorage.getItem(`${JOB_CONFIG_KEY}_${jobId}`);
+        return data ? JSON.parse(data) : null;
+    },
+
+    set: (jobId: string, config: JobConfiguration): void => {
+        if (typeof window === 'undefined') return;
+        localStorage.setItem(`${JOB_CONFIG_KEY}_${jobId}`, JSON.stringify(config));
+    },
+
+    getDefault: (): JobConfiguration => {
+        return {
+            application_form: {
+                sections: [
+                    {
+                        title: "Minimum Profile Information Required",
+                        fields: STANDARD_FIELDS
+                    }
+                ]
+            }
+        };
+    }
+};
+
+// Candidates storage
+export const candidatesStorage = {
+    getAll: (): CandidateListResponse => {
+        if (typeof window === 'undefined') return { data: [] };
+        const data = localStorage.getItem(CANDIDATES_KEY);
+        return data ? JSON.parse(data) : { data: [] };
+    },
+
+    getById: (id: string): Candidate | undefined => {
+        const candidates = candidatesStorage.getAll();
+        return candidates.data.find(candidate => candidate.id === id);
+    },
+
+    create: (candidateData: Omit<Candidate, 'id'>): Candidate => {
+        const candidates = candidatesStorage.getAll();
+        const newCandidate: Candidate = {
+            ...candidateData,
+            id: `cand_${new Date().toISOString().slice(0, 10).replace(/-/g, '')}_${String(candidates.data.length + 1).padStart(4, '0')}`,
+        };
+
+        const updatedCandidates = { data: [...candidates.data, newCandidate] };
+        localStorage.setItem(CANDIDATES_KEY, JSON.stringify(updatedCandidates));
+        return newCandidate;
+    },
+
+    update: (id: string, updates: Partial<Omit<Candidate, 'id'>>): Candidate | null => {
+        const candidates = candidatesStorage.getAll();
+        const index = candidates.data.findIndex(candidate => candidate.id === id);
+
+        if (index === -1) return null;
+
+        const updatedCandidate: Candidate = {
+            ...candidates.data[index],
+            ...updates,
+        };
+
+        candidates.data[index] = updatedCandidate;
+        localStorage.setItem(CANDIDATES_KEY, JSON.stringify(candidates));
+        return updatedCandidate;
+    },
+
+    delete: (id: string): boolean => {
+        const candidates = candidatesStorage.getAll();
+        const filteredCandidates = { data: candidates.data.filter(candidate => candidate.id !== id) };
+
+        if (filteredCandidates.data.length === candidates.data.length) return false;
+
+        localStorage.setItem(CANDIDATES_KEY, JSON.stringify(filteredCandidates));
+        return true;
+    },
+};
+
+// Applications storage (legacy - can be removed later)
 export const applicationsStorage = {
     getAll: (): Application[] => {
         if (typeof window === 'undefined') return [];

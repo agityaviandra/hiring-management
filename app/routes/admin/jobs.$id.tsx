@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router";
+import { useParams, Link, useNavigate } from "react-router";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Badge } from "~/components/ui/badge";
@@ -7,6 +7,7 @@ import { Checkbox } from "~/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "~/components/ui/table";
 import { jobsStorage, applicationsStorage } from "~/utils/storage";
 import { type Job, type Application } from "~/types";
+import { EmptyState } from "~/components/ui/empty-state";
 
 export default function ManageJobPage() {
     const { id } = useParams();
@@ -20,7 +21,7 @@ export default function ManageJobPage() {
         if (id) {
             const jobData = jobsStorage.getById(id);
             if (jobData) {
-                setJob(jobData);
+                setJob(jobData as unknown as Job);
                 // Get applications for this job
                 const jobApplications = applicationsStorage.getByJobId(id);
                 setApplications(jobApplications);
@@ -100,20 +101,6 @@ export default function ManageJobPage() {
         );
     }
 
-    if (!job) {
-        return (
-            <div className="flex items-center justify-center min-h-screen">
-                <div className="text-center">
-                    <h1 className="heading-s-bold text-neutral-100 mb-2">Job Not Found</h1>
-                    <p className="text-m-regular text-neutral-70 mb-4">The job you're looking for doesn't exist.</p>
-                    <Link to="/admin/jobs">
-                        <Button>Back to Jobs</Button>
-                    </Link>
-                </div>
-            </div>
-        );
-    }
-
     return (
         <div className="min-h-screen bg-neutral-20">
             {/* Header with Breadcrumb */}
@@ -149,12 +136,10 @@ export default function ManageJobPage() {
             {/* Main Content */}
             <div className="container mx-auto px-6 py-8">
                 {/* Job Title */}
-                <div className="mb-6">
-                    <h1 className="text-xl-bold text-neutral-100 mb-2">{job.title}</h1>
-                    {/* <p className="text-m-regular text-neutral-70">{job.}</p> */}
-                </div>
+                <h1 className="text-xl-bold text-neutral-100">{job?.title}</h1>
+                {/* <p className="text-m-regular text-neutral-70">{job.}</p> */}
 
-                {/* Search and Filters */}
+                {/* Search and Filters
                 <div className="bg-white rounded-lg border border-neutral-40 p-6 mb-6">
                     <div className="flex items-center gap-4">
                         <div className="flex-1">
@@ -172,11 +157,11 @@ export default function ManageJobPage() {
                             Export
                         </Button>
                     </div>
-                </div>
+                </div> */}
 
-                {/* Selected Applications Actions */}
+                Selected Applications Actions
                 {selectedApplications.size > 0 && (
-                    <div className="bg-primary-surface border border-primary-border rounded-lg p-4 mb-6">
+                    <div className="bg-primary-surface border border-primary-border rounded-lg p-4 mb-4">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                                 <span className="text-m-regular text-primary-main">
@@ -192,9 +177,9 @@ export default function ManageJobPage() {
                                 </Button>
                             </div>
                             <div className="flex items-center gap-2">
-                                <Button variant="outline" size="sm" className="text-primary-main border-primary-border hover:bg-primary-main hover:text-white">
+                                {/* <Button variant="outline" size="sm" className="text-primary-main border-primary-border hover:bg-primary-main hover:text-white">
                                     Bulk Actions
-                                </Button>
+                                </Button> */}
                                 <Button size="sm" className="bg-primary-main hover:bg-primary-hover text-white">
                                     Export Selected
                                 </Button>
@@ -205,31 +190,17 @@ export default function ManageJobPage() {
 
                 {/* Applications Table */}
                 <div className="bg-white rounded-lg border border-neutral-40 overflow-hidden">
-                    {filteredApplications.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-16 text-center">
-                            <svg
-                                className="mx-auto h-12 w-12 text-neutral-60"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    vectorEffect="non-scaling-stroke"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                                />
-                            </svg>
-                            <h3 className="mt-2 text-m-bold text-neutral-100">No candidates found</h3>
-                            <p className="mt-1 text-s-regular text-neutral-70">
-                                {searchQuery
-                                    ? "No candidates match your search criteria."
-                                    : "No applications have been submitted for this job yet."
-                                }
-                            </p>
-                        </div>
+                    {filteredApplications.length === 0 || !job ? (
+                        <EmptyState
+                            className="h-full"
+                            illustration="/empty_state_2.svg"
+                            title="No candidates found"
+                            description="Share your job vacancies so that more candidates will apply."
+                            actionOnClick={() => {
+                                const navigate = useNavigate();
+                                navigate('/admin/jobs');
+                            }}
+                        />
                     ) : (
                         <Table>
                             <TableHeader>
@@ -238,7 +209,7 @@ export default function ManageJobPage() {
                                         <Checkbox
                                             checked={isAllSelected}
                                             onCheckedChange={handleSelectAll}
-                                            className="size-5 border-pr data-[state=checked]:bg-primary-main data-[state=checked]:border-primary-main data-[state=indeterminate]:bg-primary-main data-[state=indeterminate]:border-primary-main"
+                                            className="size-5 border-primary-main data-[state=checked]:bg-primary-main data-[state=checked]:border-primary-main data-[state=indeterminate]:bg-primary-main data-[state=indeterminate]:border-primary-main"
                                         />
                                     </TableHead>
                                     <TableHead className="text-s-bold text-neutral-100 font-bold w-[189px] p-4">EMAIL ADDRESS</TableHead>
@@ -256,7 +227,7 @@ export default function ManageJobPage() {
                                             <Checkbox
                                                 checked={selectedApplications.has(application.id)}
                                                 onCheckedChange={(checked) => handleSelectApplication(application.id, checked as boolean)}
-                                                className="size-5 border-pr data-[state=checked]:bg-primary-main data-[state=checked]:border-primary-main"
+                                                className="size-5 border-primary-main data-[state=checked]:bg-primary-main data-[state=checked]:border-primary-main"
                                             />
                                         </TableCell>
                                         <TableCell className="text-m-regular text-neutral-100 p-4">
@@ -293,7 +264,7 @@ export default function ManageJobPage() {
                     )}
                 </div>
 
-                {/* Statistics Summary */}
+                {/* Statistics Summary
                 {applications.length > 0 && (
                     <div className="mt-6 bg-white rounded-lg border border-neutral-40 p-6">
                         <h3 className="text-m-bold text-neutral-100 mb-4">Application Summary</h3>
@@ -324,7 +295,7 @@ export default function ManageJobPage() {
                             </div>
                         </div>
                     </div>
-                )}
+                )} */}
             </div>
         </div>
     );
