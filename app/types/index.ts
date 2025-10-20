@@ -21,6 +21,8 @@ export interface JobListItem {
     slug: string;
     title: string;
     status: JobStatus;
+    jobType?: string;
+    description?: string;
     salary_range: SalaryRange;
     list_card: ListCard;
 }

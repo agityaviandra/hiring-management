@@ -10,6 +10,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
 import { useAuthStore } from "~/stores/useAuthStore";
 import { Input } from "~/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import FilterPopOver, { type CandidateFilters } from "~/components/ui/filter-popover";
 
 export default function ManageJobPage() {
@@ -389,20 +390,24 @@ export default function ManageJobPage() {
                             }}
                         />
                         <div className="flex items-center gap-2">
-                            <label className="text-s-regular text-neutral-70">Rows per page</label>
-                            <select
-                                value={pageSize}
-                                onChange={(e) => {
-                                    setPageSize(Number(e.target.value));
+                            <span className="text-s-regular text-neutral-70">Rows per page</span>
+                            <Select
+                                value={pageSize.toString()}
+                                onValueChange={(value) => {
+                                    setPageSize(Number(value));
                                     setCurrentPage(1);
                                 }}
-                                className="h-10 border border-neutral-40 rounded px-2"
                             >
-                                <option value={5}>5</option>
-                                <option value={10}>10</option>
-                                <option value={20}>20</option>
-                                <option value={50}>50</option>
-                            </select>
+                                <SelectTrigger className="w-20 h-10">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent className="min-w-[100px]">
+                                    <SelectItem value="5">5</SelectItem>
+                                    <SelectItem value="10">10</SelectItem>
+                                    <SelectItem value="20">20</SelectItem>
+                                    <SelectItem value="50">50</SelectItem>
+                                </SelectContent>
+                            </Select>
                         </div>
                     </div>
 

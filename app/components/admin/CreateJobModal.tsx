@@ -53,6 +53,8 @@ export function CreateJobModal({ isOpen, onClose, onJobSaved }: CreateJobModalPr
                 slug,
                 title: data.title,
                 status: 'active' as const,
+                jobType: data.jobType,
+                description: data.description,
                 salary_range: {
                     min: data.salaryMin,
                     max: data.salaryMax,
