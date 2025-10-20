@@ -41,13 +41,13 @@ export default function AdminJobsPage() {
         setDropdownContainer(container);
     }, []);
 
-    useEffect(() => {
-        const loadJobs = () => {
-            const allJobs = jobsStorage.getAll();
-            setJobs(allJobs.data);
-            setIsLoading(false);
-        };
+    const loadJobs = () => {
+        const allJobs = jobsStorage.getAll();
+        setJobs(allJobs.data);
+        setIsLoading(false);
+    };
 
+    useEffect(() => {
         loadJobs();
     }, []);
 
@@ -78,41 +78,43 @@ export default function AdminJobsPage() {
         <div className="min-h-screen bg-white" id="main-content">
             {/* Header */}
             <div className="bg-white border-b border-neutral-40 h-16">
-                <div className="h-full px-6 flex items-center justify-between">
-                    <h1 className="text-xl-bold text-neutral-100">Job List</h1>
-                    <div className="flex items-center gap-6">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <div className="relative size-7 rounded-full cursor-pointer hover:opacity-80 transition-opacity">
-                                    <img
-                                        src="/female-avatar.svg"
-                                        alt="User avatar"
-                                        className="w-full h-full object-cover rounded-full"
-                                    />
-                                </div>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56" align="end" forceMount container={dropdownContainer}>
-                                <DropdownMenuLabel className="font-normal">
-                                    <div className="flex flex-col space-y-1">
-                                        <p className="text-sm font-medium leading-none text-neutral-100">{user?.name}</p>
-                                        <p className="text-xs leading-none text-neutral-70">
-                                            {user?.email}
-                                        </p>
+                <div className="container mx-auto px-6 py-4">
+                    <div className="h-full flex items-center justify-between">
+                        <h1 className="text-xl-bold text-neutral-100">Job List</h1>
+                        <div className="flex items-center gap-6">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <div className="relative size-7 rounded-full cursor-pointer hover:opacity-80 transition-opacity">
+                                        <img
+                                            src="/female-avatar.svg"
+                                            alt="User avatar"
+                                            className="w-full h-full object-cover rounded-full"
+                                        />
                                     </div>
-                                </DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem onClick={handleLogout} className="text-danger-main">
-                                    <ArrowRightStartOnRectangleIcon className="mr-2 h-4 w-4" />
-                                    <span>Log out</span>
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="w-56" align="end">
+                                    <DropdownMenuLabel className="font-normal">
+                                        <div className="flex flex-col space-y-1">
+                                            <p className="text-sm font-medium leading-none text-neutral-100">{user?.name}</p>
+                                            <p className="text-xs leading-none text-neutral-70">
+                                                {user?.email}
+                                            </p>
+                                        </div>
+                                    </DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={handleLogout} className="text-danger-main">
+                                        <ArrowRightStartOnRectangleIcon className="mr-2 h-4 w-4" />
+                                        <span>Log out</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Main Content */}
-            <div className="px-6 py-4">
+            <div className="container mx-auto px-6 py-8">
                 <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-6">
                     {/* Left Column - Job List */}
                     <div className="space-y-4">
@@ -143,7 +145,7 @@ export default function AdminJobsPage() {
                         ) : (
                             <div className="grid gap-4 custom-scrollbar h-fit overflow-visible">
                                 {filteredJobs.map((job) => (
-                                    <JobCard key={job.id} job={job} />
+                                    <JobCard key={job.id} job={job} onStatusUpdate={loadJobs} />
                                 ))}
                             </div>
                         )}

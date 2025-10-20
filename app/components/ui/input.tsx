@@ -5,10 +5,11 @@ import { cn } from "~/lib/utils"
 interface InputProps extends React.ComponentProps<"input"> {
     icon?: React.ReactNode | string
     iconPosition?: "left" | "right"
+    hasError?: boolean
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-    ({ className, type, icon, iconPosition = "left", ...props }, ref) => {
+    ({ className, type, icon, iconPosition = "left", hasError = false, ...props }, ref) => {
         if (icon) {
             const iconElement = typeof icon === "string" ? (
                 <span className="text-sm font-medium">{icon}</span>
@@ -26,7 +27,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
                     <input
                         type={type}
                         className={cn(
-                            "flex h-10 w-full text-m-regular text-neutral-100 rounded-lg border-2 border-solid border-neutral-40 bg-white py-2 transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-neutral-100 placeholder:text-neutral-60 focus-visible:outline-none focus-visible:border-[3px] focus-visible:border-primary-main/20 disabled:cursor-not-allowed disabled:opacity-50",
+                            "flex h-10 w-full text-m-regular text-neutral-100 rounded-lg border-2 border-solid bg-white py-2 transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-neutral-100 placeholder:text-neutral-60 focus-visible:outline-none focus-visible:border-[3px] focus-visible:border-primary-main/20 disabled:cursor-not-allowed disabled:opacity-50",
+                            hasError ? "border-danger-main" : "border-neutral-40",
                             iconPosition === "left" ? "pl-8 pr-4" : "pl-4 pr-8",
                             className
                         )}
@@ -46,7 +48,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             <input
                 type={type}
                 className={cn(
-                    "flex h-10 w-full text-m-regular text-neutral-100 rounded-lg border-2 border-solid border-neutral-40 bg-white px-4 py-2 transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-neutral-100 placeholder:text-neutral-60 focus-visible:outline-none focus-visible:border-[3px] focus-visible:border-primary-main/20 disabled:cursor-not-allowed disabled:opacity-50",
+                    "flex h-10 w-full text-m-regular text-neutral-100 rounded-lg border-2 border-solid bg-white px-4 py-2 transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-neutral-100 placeholder:text-neutral-60 focus-visible:outline-none focus-visible:border-[3px] focus-visible:border-primary-main/20 disabled:cursor-not-allowed disabled:opacity-50",
+                    hasError ? "border-danger-main" : "border-danger-border",
                     className
                 )}
                 ref={ref}

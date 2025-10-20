@@ -1,6 +1,9 @@
 import { Link } from "react-router";
 import { Button } from "~/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "~/components/ui/select";
 import { type Job, type JobStatus } from "~/types";
+import { jobsStorage } from "~/utils/storage";
+import { toast } from "~/components/ui/toast";
 
 interface JobStatusBadgeProps {
     status: JobStatus;
@@ -45,9 +48,37 @@ function JobStatusBadge({ status }: JobStatusBadgeProps) {
 
 interface JobCardProps {
     job: Job;
+    onStatusUpdate?: () => void;
 }
 
-export function JobCard({ job }: JobCardProps) {
+export function JobCard({ job, onStatusUpdate }: JobCardProps) {
+    const handleStatusChange = (newStatus: JobStatus) => {
+        try {
+            const updatedJob = jobsStorage.update(job.id, {
+                status: newStatus,
+                list_card: {
+                    ...job.list_card,
+                    badge: newStatus.charAt(0).toUpperCase() + newStatus.slice(1)
+                }
+            });
+
+            if (updatedJob) {
+                toast.success({
+                    title: "Status updated successfully",
+                    description: `Job status changed to ${newStatus}`
+                });
+                onStatusUpdate?.();
+            } else {
+                throw new Error('Failed to update job status');
+            }
+        } catch (error) {
+            console.error('Error updating job status:', error);
+            toast.error({
+                title: "Failed to update status",
+                description: "There was an error updating the job status. Please try again."
+            });
+        }
+    };
     return (
         <div className="bg-neutral-10 box-border flex flex-col gap-3 items-start p-6 relative rounded-2xl w-full transition-all duration-200 shadow-modal">
             {/* Status + Start Date Row */}
@@ -88,8 +119,21 @@ export function JobCard({ job }: JobCardProps) {
                     </div>
                 </div>
 
-                {/* CTA Button */}
-                <div className="flex flex-col gap-2.5 items-end justify-end relative shrink-0">
+                {/* Status Update + CTA Buttons */}
+                <div className="flex gap-2.5 items-end justify-end relative shrink-0">
+                    {/* Status Update Dropdown */}
+                    <Select value={job.status} onValueChange={handleStatusChange}>
+                        <SelectTrigger className="h-8 min-h-0 px-3 py-1 text-xs w-24 text-xs-bold rounded-lg border-2 border-neutral-40" style={{ height: '32px' }}>
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="min-w-[100px] w-28">
+                            <SelectItem className="text-xs px-2" value="active">Active</SelectItem>
+                            <SelectItem className="text-xs px-2" value="inactive">Inactive</SelectItem>
+                            <SelectItem className="text-xs px-2" value="draft">Draft</SelectItem>
+                        </SelectContent>
+                    </Select>
+
+                    {/* Manage Job Button */}
                     <Button variant={"default"} size={"sm"} asChild>
                         <Link to={`/admin/jobs/${job.id}`}>
                             Manage Job

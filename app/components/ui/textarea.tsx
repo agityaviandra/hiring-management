@@ -4,10 +4,11 @@ import { cn } from "~/lib/utils"
 
 interface TextareaProps extends React.ComponentProps<"textarea"> {
     enableBulletList?: boolean;
+    hasError?: boolean;
 }
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
-    ({ className, enableBulletList = false, ...props }, ref) => {
+    ({ className, enableBulletList = false, hasError = false, ...props }, ref) => {
         const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
             if (!enableBulletList) {
                 props.onKeyDown?.(e);
@@ -91,7 +92,8 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
         return (
             <textarea
                 className={cn(
-                    "flex min-h-[60px] w-full text-m-regular text-neutral-100 rounded-lg border-2 border-solid border-neutral-40 bg-white px-4 py-2 transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-neutral-100 placeholder:text-neutral-60 focus-visible:outline-none focus-visible:border-[3px] focus-visible:border-primary-main/20 disabled:cursor-not-allowed disabled:opacity-50",
+                    "flex min-h-[60px] w-full text-m-regular text-neutral-100 rounded-lg border-2 border-solid bg-white px-4 py-2 transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-neutral-100 placeholder:text-neutral-60 focus-visible:outline-none focus-visible:border-[3px] focus-visible:border-primary-main/20 disabled:cursor-not-allowed disabled:opacity-50",
+                    hasError ? "border-danger-main" : "border-neutral-40",
                     enableBulletList && "whitespace-pre-wrap",
                     className
                 )}

@@ -39,57 +39,6 @@ export const jobsStorage = {
 
         const updatedJobs = { data: [...jobs.data, newJob] };
         localStorage.setItem(JOBS_KEY, JSON.stringify(updatedJobs));
-
-        // Create sample applications for the first job
-        if (jobs.data.length === 0) {
-            const sampleApplications: Application[] = [
-                {
-                    id: 'app-1',
-                    jobId: newJob.id,
-                    applicantEmail: 'john.doe@example.com',
-                    fieldData: {
-                        full_name: 'John Doe',
-                        phone_number: '+1 (555) 123-4567',
-                        linkedin_link: 'https://linkedin.com/in/johndoe',
-                        domicile: 'Jakarta',
-                        gender: 'Male'
-                    },
-                    status: 'pending',
-                    submittedAt: new Date().toISOString()
-                },
-                {
-                    id: 'app-2',
-                    jobId: newJob.id,
-                    applicantEmail: 'jane.smith@example.com',
-                    fieldData: {
-                        full_name: 'Jane Smith',
-                        phone_number: '+1 (555) 987-6543',
-                        linkedin_link: 'https://linkedin.com/in/janesmith',
-                        domicile: 'Bandung',
-                        gender: 'Female'
-                    },
-                    status: 'reviewed',
-                    submittedAt: new Date(Date.now() - 86400000).toISOString() // 1 day ago
-                },
-                {
-                    id: 'app-3',
-                    jobId: newJob.id,
-                    applicantEmail: 'mike.wilson@example.com',
-                    fieldData: {
-                        full_name: 'Mike Wilson',
-                        phone_number: '+1 (555) 456-7890',
-                        linkedin_link: 'https://linkedin.com/in/mikewilson',
-                        domicile: 'Surabaya',
-                        gender: 'Male'
-                    },
-                    status: 'shortlisted',
-                    submittedAt: new Date(Date.now() - 172800000).toISOString() // 2 days ago
-                }
-            ];
-
-            localStorage.setItem(APPLICATIONS_KEY, JSON.stringify(sampleApplications));
-        }
-
         return newJob;
     },
 

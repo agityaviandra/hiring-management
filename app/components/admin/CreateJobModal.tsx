@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { CurrencyDollarIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
@@ -20,33 +19,17 @@ import { jobSchema, type JobFormData } from "~/lib/validations/job-form";
 interface CreateJobModalProps {
     isOpen: boolean;
     onClose: () => void;
-    jobToEdit?: JobListItem;
     onJobSaved?: () => void;
 }
 
-export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: CreateJobModalProps) {
+export function CreateJobModal({ isOpen, onClose, onJobSaved }: CreateJobModalProps) {
     const navigate = useNavigate();
-    const [applicationFields, setApplicationFields] = useState<ApplicationField[]>(() => {
-        if (jobToEdit) {
-            // Get the job configuration to load the fields
-            const config = jobConfigStorage.get(jobToEdit.id);
-            return config?.application_form.sections[0]?.fields || STANDARD_FIELDS;
-        }
-        // Initialize with standard fields
-        return STANDARD_FIELDS;
-    });
+    const [applicationFields, setApplicationFields] = useState<ApplicationField[]>(STANDARD_FIELDS);
     const [profilePicture, setProfilePicture] = useState<string>("");
 
     const form = useForm<JobFormData>({
         resolver: zodResolver(jobSchema),
-        defaultValues: jobToEdit ? {
-            title: jobToEdit.title,
-            jobType: "full-time",
-            description: "", // We'll need to add description to JobListItem if needed
-            candidateCount: undefined,
-            salaryMin: jobToEdit.salary_range.min,
-            salaryMax: jobToEdit.salary_range.max,
-        } : {
+        defaultValues: {
             title: "",
             jobType: "",
             description: "",
@@ -69,7 +52,7 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
             const jobData = {
                 slug,
                 title: data.title,
-                status: 'draft' as const,
+                status: 'active' as const,
                 salary_range: {
                     min: data.salaryMin,
                     max: data.salaryMax,
@@ -77,34 +60,27 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                     display_text: `${formatSalary(data.salaryMin)} - ${formatSalary(data.salaryMax)}`
                 },
                 list_card: {
-                    badge: 'Draft',
+                    badge: 'Active',
                     started_on_text: `started on ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}`,
                     cta: 'Manage Job'
                 }
             };
 
             let savedJob: JobListItem;
-            if (jobToEdit) {
-                const updatedJob = jobsStorage.update(jobToEdit.id, jobData);
-                if (!updatedJob) throw new Error('Failed to update job');
-                savedJob = updatedJob;
-                toast.success({
-                    title: "Job vacancy successfully updated",
-                });
-            } else {
-                savedJob = jobsStorage.create(jobData);
-                toast.success({
-                    title: "Job vacancy successfully created",
-                });
-            }
+            savedJob = jobsStorage.create(jobData);
+            toast.success({
+                title: "Job vacancy successfully created",
+            });
 
-            // Save the job configuration - convert visibility to backend format
-            const backendFields = applicationFields.map(field => ({
-                key: field.key,
-                validation: {
-                    required: field.validation.visibility === 'mandatory'
-                }
-            }));
+            // Save the job configuration - filter out hidden fields and convert visibility to backend format
+            const backendFields = applicationFields
+                .filter(field => field.validation.visibility !== 'hidden')
+                .map(field => ({
+                    key: field.key,
+                    validation: {
+                        required: field.validation.visibility === 'mandatory'
+                    }
+                }));
 
             jobConfigStorage.set(savedJob.id, {
                 application_form: {
@@ -148,19 +124,6 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
         );
     };
 
-    const getVisibilityColor = (visibility: FieldVisibility) => {
-        switch (visibility) {
-            case 'mandatory':
-                return 'bg-white border-primary-main text-primary-main';
-            case 'optional':
-                return 'bg-white border-primary-main text-primary-main';
-            case 'hidden':
-                return 'bg-neutral-20 border-neutral-40 text-neutral-70';
-            default:
-                return 'bg-neutral-20 border-neutral-40 text-neutral-70';
-        }
-    };
-
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="!max-w-5xl max-h-[90vh] overflow-y-auto p-0">
@@ -186,7 +149,7 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                             <FormField
                                 control={form.control}
                                 name="title"
-                                render={({ field }) => (
+                                render={({ field, fieldState }) => (
                                     <FormItem>
                                         <FormLabel className="text-s-regular text-neutral-70">
                                             Job Name<span className="text-danger-main">*</span>
@@ -194,7 +157,7 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                                         <FormControl>
                                             <Input
                                                 placeholder="Ex. Front End Engineer"
-
+                                                hasError={!!fieldState.error}
                                                 {...field}
                                             />
                                         </FormControl>
@@ -206,14 +169,14 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                             <FormField
                                 control={form.control}
                                 name="jobType"
-                                render={({ field }) => (
+                                render={({ field, fieldState }) => (
                                     <FormItem>
                                         <FormLabel className="text-s-regular text-neutral-70">
                                             Job Type<span className="text-danger-main">*</span>
                                         </FormLabel>
                                         <FormControl>
                                             <Select onValueChange={field.onChange} value={field.value}>
-                                                <SelectTrigger>
+                                                <SelectTrigger hasError={!!fieldState.error}>
                                                     <SelectValue placeholder="Select job type" />
                                                 </SelectTrigger>
                                                 <SelectContent>
@@ -232,7 +195,7 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                             <FormField
                                 control={form.control}
                                 name="description"
-                                render={({ field }) => (
+                                render={({ field, fieldState }) => (
                                     <FormItem>
                                         <FormLabel className="text-s-regular text-neutral-70">
                                             Job Description<span className="text-danger-main">*</span>
@@ -242,7 +205,8 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                                                 placeholder="Ex."
                                                 rows={4}
                                                 enableBulletList={true}
-                                                className="border-2 border-neutral-30 focus:border-primary-main focus:ring-2 focus:ring-primary-focus"
+                                                hasError={!!fieldState.error}
+                                                // className="border-2 border-neutral-30 focus:border-primary-main focus:ring-2 focus:ring-primary-focus"
                                                 {...field}
                                             />
                                         </FormControl>
@@ -254,7 +218,7 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                             <FormField
                                 control={form.control}
                                 name="candidateCount"
-                                render={({ field }) => (
+                                render={({ field, fieldState }) => (
                                     <FormItem>
                                         <FormLabel className="text-s-regular text-neutral-70">
                                             Number of Candidate Needed<span className="text-danger-main">*</span>
@@ -263,6 +227,7 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                                             <Input
                                                 type="number"
                                                 placeholder="Ex. 2"
+                                                hasError={!!fieldState.error}
                                                 {...field}
                                                 onChange={(e) => field.onChange(parseInt(e.target.value))}
                                             />
@@ -282,7 +247,7 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                                     <FormField
                                         control={form.control}
                                         name="salaryMin"
-                                        render={({ field }) => (
+                                        render={({ field, fieldState }) => (
                                             <FormItem>
                                                 <FormLabel className="text-s-regular text-neutral-70">
                                                     Minimum Estimated Salary
@@ -291,6 +256,7 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                                                     <Input
                                                         type="text"
                                                         placeholder="7.000.000"
+                                                        hasError={!!fieldState.error}
                                                         icon={
                                                             <span className="text-m-bold text-neutral-90">
                                                                 Rp
@@ -318,7 +284,7 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                                     <FormField
                                         control={form.control}
                                         name="salaryMax"
-                                        render={({ field }) => (
+                                        render={({ field, fieldState }) => (
                                             <FormItem>
                                                 <FormLabel className="text-s-regular text-neutral-70">
                                                     Maximum Estimated Salary
@@ -327,6 +293,7 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                                                     <Input
                                                         type="text"
                                                         placeholder="8.000.000"
+                                                        hasError={!!fieldState.error}
                                                         icon={
                                                             <span className="text-m-bold text-neutral-90">
                                                                 Rp
@@ -379,7 +346,7 @@ export function CreateJobModal({ isOpen, onClose, jobToEdit, onJobSaved }: Creat
                                                     size="sm"
                                                     onClick={() => handleFieldVisibilityChange(field.key, visibility)}
                                                     className={`px-3 py-1 text-xs rounded-full ${field.validation.visibility === visibility
-                                                        ? getVisibilityColor(visibility)
+                                                        ? "bg-white border-primary-main text-primary-main"
                                                         : 'bg-neutral-20 border-neutral-40 text-neutral-70'
                                                         }`}
                                                 >

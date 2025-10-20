@@ -2,12 +2,10 @@
 @import "tw-animate-css";
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
-@custom-variant dark (&:is(.dark *));
-
 @theme {
   --font-sans: "Nunito Sans", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  
+
   /* Custom Color System */
   --color-neutral-10: #FFFFFF;
   --color-neutral-20: #FAFAFA;
@@ -19,35 +17,35 @@
   --color-neutral-80: #616161;
   --color-neutral-90: #404040;
   --color-neutral-100: #1D1F20;
-  
+
   --color-primary-main: #01959F;
   --color-primary-surface: #F7FEFF;
   --color-primary-border: #4DB5BC;
   --color-primary-hover: #01777F;
   --color-primary-pressed: #01595F;
   --color-primary-focus: rgba(1, 149, 159, 0.2);
-  
+
   --color-secondary-main: #FBC037;
   --color-secondary-surface: #FFFCF5;
   --color-secondary-border: #FEEABC;
   --color-secondary-hover: #F8A92F;
   --color-secondary-pressed: #FA9810;
   --color-secondary-focus: rgba(251, 192, 55, 0.2);
-  
+
   --color-danger-main: #E11428;
   --color-danger-surface: #FFF9FA;
   --color-danger-border: #F5B1B7;
   --color-danger-hover: #BC1121;
   --color-danger-pressed: #700A14;
   --color-danger-focus: rgba(225, 20, 40, 0.2);
-  
+
   --color-warning-main: #CA7336;
   --color-warning-surface: #FCF7F3;
   --color-warning-border: #FEB17B;
   --color-warning-hover: #B1652F;
   --color-warning-pressed: #985628;
   --color-warning-focus: rgba(202, 115, 54, 0.2);
-  
+
   --color-success-main: #43936C;
   --color-success-surface: #F8FBF9;
   --color-success-border: #B8DBCA;
@@ -59,67 +57,67 @@
   --font-size-xs-regular: 10px;
   --line-height-xs-regular: 16px;
   --font-weight-xs-regular: 400;
-  
+
   --font-size-xs-bold: 10px;
   --line-height-xs-bold: 16px;
   --font-weight-xs-bold: 700;
-  
+
   --font-size-s-regular: 12px;
   --line-height-s-regular: 20px;
   --font-weight-s-regular: 400;
-  
+
   --font-size-s-bold: 12px;
   --line-height-s-bold: 20px;
   --font-weight-s-bold: 700;
-  
+
   --font-size-m-regular: 14px;
   --line-height-m-regular: 24px;
   --font-weight-m-regular: 400;
-  
+
   --font-size-m-bold: 14px;
   --line-height-m-bold: 24px;
   --font-weight-m-bold: 700;
-  
+
   --font-size-l-regular: 16px;
   --line-height-l-regular: 28px;
   --font-weight-l-regular: 400;
-  
+
   --font-size-l-bold: 16px;
   --line-height-l-bold: 28px;
   --font-weight-l-bold: 700;
-  
+
   --font-size-xl-regular: 18px;
   --line-height-xl-regular: 28px;
   --font-weight-xl-regular: 400;
-  
+
   --font-size-xl-bold: 18px;
   --line-height-xl-bold: 28px;
   --font-weight-xl-bold: 700;
-  
+
   --font-size-heading-s-regular: 20px;
   --line-height-heading-s-regular: 32px;
   --font-weight-heading-s-regular: 400;
-  
+
   --font-size-heading-s-bold: 20px;
   --line-height-heading-s-bold: 32px;
   --font-weight-heading-s-bold: 700;
-  
+
   --font-size-heading-m-regular: 24px;
   --line-height-heading-m-regular: 36px;
   --font-weight-heading-m-regular: 400;
-  
+
   --font-size-heading-m-bold: 24px;
   --line-height-heading-m-bold: 36px;
   --font-weight-heading-m-bold: 700;
-  
+
   --font-size-heading-l-regular: 32px;
   --line-height-heading-l-regular: 44px;
   --font-weight-heading-l-regular: 400;
-  
+
   --font-size-heading-l-bold: 32px;
   --line-height-heading-l-bold: 44px;
   --font-weight-heading-l-bold: 700;
-  
+
   --font-size-display-bold: 48px;
   --line-height-display-bold: 64px;
   --font-weight-display-bold: 700;
@@ -133,7 +131,7 @@
 
 html,
 body {
-  @apply bg-neutral-30 dark:bg-neutral-100;
+  @apply bg-white dark:bg-neutral-100;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
@@ -180,6 +178,39 @@ body {
 
 :root {
   --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.13 0.028 261.692);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.13 0.028 261.692);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.13 0.028 261.692);
+  --primary: oklch(0.21 0.034 264.665);
+  --primary-foreground: oklch(0.985 0.002 247.839);
+  --company-gold: oklch(0.75 0.15 80);
+  --company-navy: oklch(0.35 0.05 260);
+  --secondary: oklch(0.967 0.003 264.542);
+  --secondary-foreground: oklch(0.21 0.034 264.665);
+  --muted: oklch(0.967 0.003 264.542);
+  --muted-foreground: oklch(0.551 0.027 264.364);
+  --accent: oklch(0.967 0.003 264.542);
+  --accent-foreground: oklch(0.21 0.034 264.665);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.928 0.006 264.531);
+  --input: oklch(0.928 0.006 264.531);
+  --ring: oklch(0.707 0.022 261.325);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0.002 247.839);
+  --sidebar-foreground: oklch(0.13 0.028 261.692);
+  --sidebar-primary: oklch(0.21 0.034 264.665);
+  --sidebar-primary-foreground: oklch(0.985 0.002 247.839);
+  --sidebar-accent: oklch(0.967 0.003 264.542);
+  --sidebar-accent-foreground: oklch(0.21 0.034 264.665);
+  --sidebar-border: oklch(0.928 0.006 264.531);
+  --sidebar-ring: oklch(0.707 0.022 261.325);
 }
 
 .dark {
@@ -220,10 +251,12 @@ body {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
     font-family: "Nunito Sans", ui-sans-serif, system-ui, sans-serif;
   }
+
   button:not([disabled]),
   [role="button"]:not([disabled]) {
     cursor: pointer;
@@ -351,30 +384,30 @@ body {
   font-family: var(--font-sans);
 }
 
-  /* Custom Scrollbar */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 10px;
-  }
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 10px;
+}
 
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: #e6e6e6;
-    border-radius: 16px;
-  }
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #e6e6e6;
+  border-radius: 16px;
+}
 
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #01959f;
-    border-radius: 8px;
-  }
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #01959f;
+  border-radius: 8px;
+}
 
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #01777f;
-  }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #01777f;
+}
 
-  /* Firefox scrollbar */
-  .custom-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: #01959f #e6e6e6;
-  }
+/* Firefox scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #01959f #e6e6e6;
+}
 
 /* Shadow System - Custom utility classes for Tailwind v4 */
 @utility shadow-input {

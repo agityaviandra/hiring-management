@@ -10,7 +10,7 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 default:
-                    "bg-primary-main text-neutral-10 shadow-sm hover:bg-primary-hover active:bg-primary-pressed focus-visible:ring-primary-focus",
+                    "bg-primary-main !text-neutral-10 shadow-sm hover:bg-primary-hover active:bg-primary-pressed focus-visible:ring-primary-focus",
                 "alternative-primary":
                     "bg-secondary-main !text-neutral-90 shadow-sm hover:bg-secondary-hover active:bg-secondary-pressed focus-visible:ring-secondary-focus",
                 outline:

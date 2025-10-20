@@ -10,14 +10,19 @@ const SelectGroup = SelectPrimitive.Group
 
 const SelectValue = SelectPrimitive.Value
 
+interface SelectTriggerProps extends React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> {
+    hasError?: boolean
+}
+
 const SelectTrigger = React.forwardRef<
     React.ElementRef<typeof SelectPrimitive.Trigger>,
-    React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
->(({ className, children, ...props }, ref) => (
+    SelectTriggerProps
+>(({ className, children, hasError = false, ...props }, ref) => (
     <SelectPrimitive.Trigger
         ref={ref}
         className={cn(
-            "flex h-10 w-full text-xs-bold text-neutral-100 items-center justify-between whitespace-nowrap rounded-lg border-2 border-solid border-neutral-40 bg-white px-4 py-2 transition-colors ring-offset-background data-[placeholder]:text-neutral-60 data-[placeholder]:font-normal focus:outline-none focus:border-[3px] focus:border-primary-main/20 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+            "flex h-10 w-full text-xs-bold text-neutral-100 items-center justify-between whitespace-nowrap rounded-lg border-2 border-solid bg-white px-4 py-2 transition-colors ring-offset-background data-[placeholder]:text-neutral-60 data-[placeholder]:font-normal focus:outline-none focus:border-[3px] focus:border-primary-main/20 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+            hasError ? "border-danger-main" : "border-neutral-40",
             className
         )}
         {...props}
