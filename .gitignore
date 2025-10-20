@@ -1,7 +1,17 @@
 .DS_Store
-.env
 /node_modules/
 
 # React Router
 /.react-router/
 /build/
+
+# Yarn
+.yarn/install-state.gz
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+*.gz
+
+.env
