@@ -152,7 +152,7 @@ export default function ApplicantJobDetailPage() {
                                     name="full_name"
                                     render={({ field, fieldState }) => (
                                         <FormItem>
-                                            <FormLabel className="text-s-regular text-neutral-100">
+                                            <FormLabel className="text-s-regular text-neutral-90">
                                                 Full name<span className="text-danger-main">*</span>
                                             </FormLabel>
                                             <FormControl>

@@ -14,7 +14,7 @@ const buttonVariants = cva(
                 "alternative-primary":
                     "bg-secondary-main !text-neutral-90 shadow-sm hover:bg-secondary-hover active:bg-secondary-pressed focus-visible:ring-secondary-focus",
                 outline:
-                    "border border-neutral-40 bg-white text-neutral-100 shadow-sm hover:bg-neutral-20 hover:text-neutral-100 active:bg-neutral-30 focus-visible:ring-primary-focus",
+                    "border border-neutral-40 bg-white text-neutral-100 shadow-button hover:bg-neutral-20 hover:text-neutral-100 active:bg-neutral-30 focus-visible:ring-primary-focus",
             },
             size: {
                 default: "h-10 px-4 py-2",

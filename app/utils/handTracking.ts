@@ -112,6 +112,7 @@ export function countExtendedFingers(landmarks: HandLandmark[]): number {
     // Hand landmark indices
     const FINGER_TIPS = [4, 8, 12, 16, 20]; // Thumb, Index, Middle, Ring, Pinky
     const FINGER_PIPS = [3, 6, 10, 14, 18]; // Proximal Interphalangeal Joints
+    const FINGER_MCPS = [2, 5, 9, 13, 17]; // Metacarpophalangeal Joints
 
     let extendedCount = 0;
 
@@ -119,16 +120,23 @@ export function countExtendedFingers(landmarks: HandLandmark[]): number {
     for (let i = 0; i < FINGER_TIPS.length; i++) {
         const tip = landmarks[FINGER_TIPS[i]];
         const pip = landmarks[FINGER_PIPS[i]];
+        const mcp = landmarks[FINGER_MCPS[i]];
 
-        // For thumb, check horizontal position
+        let isExtended = false;
+
+        // For thumb, check horizontal position (more reliable)
         if (i === 0) { // Thumb
-            if (tip.x > pip.x) {
-                extendedCount++;
-            }
+            // Check if thumb tip is further out than PIP joint
+            const thumbExtended = tip.x > pip.x;
+            isExtended = thumbExtended;
         } else { // Other fingers, check vertical position
-            if (tip.y < pip.y) {
-                extendedCount++;
-            }
+            // Check if finger tip is above PIP joint
+            const fingerExtended = tip.y < pip.y;
+            isExtended = fingerExtended;
+        }
+
+        if (isExtended) {
+            extendedCount++;
         }
     }
 
@@ -149,6 +157,10 @@ export function detectHandPose(detections: HandDetection[]): HandPose {
     // Use the first detected hand
     const hand = detections[0];
     const fingerCount = countExtendedFingers(hand.landmarks);
+    const pose = fingerCountToHandPose(fingerCount);
 
-    return fingerCountToHandPose(fingerCount);
+    // Debug logging
+    console.log(`Hand detected: ${fingerCount} fingers extended, pose: ${pose}`);
+
+    return pose;
 }
