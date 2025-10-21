@@ -84,9 +84,9 @@ export default function ApplicantJobsPage() {
                         actionSize="lg"
                     />
                 ) : (
-                    <div className="grid grid-cols-1 lg:grid-cols-[384px_1fr] gap-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-[384px_1fr] gap-6 h-[calc(100vh-12rem)]">
                         {/* Left Column - Job Cards */}
-                        <div className="space-y-6">
+                        <div className="overflow-y-auto space-y-6 custom-scrollbar">
                             {jobs.map((job) => (
                                 <div
                                     key={job.id}
@@ -137,7 +137,8 @@ export default function ApplicantJobsPage() {
                         </div>
 
                         {/* Right Column - Job Detail */}
-                        <div className="border border-neutral-40 border-solid rounded-lg p-6 bg-white">
+                        <div className="border border-neutral-40 border-solid rounded-lg p-6 bg-white overflow-y-auto 
+                        h-[calc(100vh-8rem)] custom-scrollbar">
                             {selectedJob ? (
                                 <>
                                     {/* Sticky Header */}

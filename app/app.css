@@ -263,6 +263,38 @@ body {
   [role="button"]:not([disabled]) {
     cursor: pointer;
   }
+
+  /* Global Custom Scrollbar */
+  * {
+    scrollbar-width: 9px;
+    scrollbar-color: var(--color-primary-main) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 9px;
+    padding-right: 16px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 16px;
+    padding-right: 16px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-neutral-40);
+    border-radius: 8px;
+    min-height: 40px;
+    padding-right: 16px;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: var(--color-neutral-60);
+  }
+
+  *::-webkit-scrollbar-thumb:active {
+    background: var(--color-neutral-50);
+  }
 }
 
 /* Typography System - Custom utility classes for Tailwind v4 */
@@ -386,29 +418,67 @@ body {
   font-family: var(--font-sans);
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar - Figma Design */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 10px;
+  width: 6px;
+  padding-right: 16px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #e6e6e6;
+  background: transparent;
   border-radius: 16px;
+  padding-right: 16px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #01959f;
+  background: var(--color-neutral-40);
   border-radius: 8px;
+  min-height: 40px;
+  padding-right: 16px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #01777f;
+  background: var(--color-neutral-60);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:active {
+  background: var(--color-neutral-50);
 }
 
 /* Firefox scrollbar */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #01959f #e6e6e6;
+  scrollbar-color: var(--color-neutral-50) transparent;
+  padding-right: 16px;
+}
+
+/* Alternative scrollbar style for different contexts */
+.custom-scrollbar-alt::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar-alt::-webkit-scrollbar-track {
+  background: var(--color-neutral-10);
+  border-radius: 16px;
+}
+
+.custom-scrollbar-alt::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-40);
+  border-radius: 8px;
+  min-height: 40px;
+}
+
+.custom-scrollbar-alt::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-60);
+}
+
+.custom-scrollbar-alt::-webkit-scrollbar-thumb:active {
+  background: var(--color-neutral-40);
+}
+
+.custom-scrollbar-alt {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neutral-40) var(--color-neutral-10);
 }
 
 /* Shadow System - Custom utility classes for Tailwind v4 */
@@ -422,4 +492,14 @@ body {
 
 @utility shadow-modal {
   box-shadow: var(--shadow-modal);
+}
+
+/* Hide Scrollbar Utility */
+.scrollbar-hide {
+  -ms-overflow-style: none !important;  /* Internet Explorer 10+ */
+  scrollbar-width: none !important;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none !important;  /* Safari and Chrome */
 }

@@ -128,7 +128,7 @@ export function CreateJobModal({ isOpen, onClose, onJobSaved }: CreateJobModalPr
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="!max-w-5xl max-h-[90vh] overflow-y-auto p-0">
+            <DialogContent className="!max-w-5xl max-h-[90vh] overflow-y-auto p-0 scrollbar-hide">
                 {/* Header */}
                 <div className="bg-white border-b border-neutral-40 px-6 py-6 rounded-t-lg">
                     <div className="flex items-center justify-between">
@@ -139,7 +139,7 @@ export function CreateJobModal({ isOpen, onClose, onJobSaved }: CreateJobModalPr
                             onClick={onClose}
                             className="w-6 h-6 flex items-center justify-center hover:bg-neutral-20 rounded"
                         >
-                            <XMarkIcon onClick={() => form.reset()} className="w-4 h-4 text-neutral-70" />
+                            <XMarkIcon onClick={() => form.reset()} className="w-6 h-6 text-neutral-70 stroke-2" />
                         </button>
                     </div>
                 </div>

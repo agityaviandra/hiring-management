@@ -8,6 +8,7 @@ interface DatePickerProps {
     value?: string; // yyyy-mm-dd
     onChange: (next: string) => void;
     placeholder?: string;
+    hasError?: boolean;
 }
 
 function toISODate(d: Date): string {
@@ -17,7 +18,7 @@ function toISODate(d: Date): string {
     return `${y}-${m}-${day}`;
 }
 
-export default function DatePicker({ value, onChange, placeholder = "Select date" }: DatePickerProps) {
+export default function DatePicker({ value, onChange, placeholder = "Select date", hasError = false }: DatePickerProps) {
     const initialDate = useMemo(() => (value ? new Date(value) : new Date()), [value]);
     const [open, setOpen] = useState(false);
     const [viewYear, setViewYear] = useState(initialDate.getFullYear());
@@ -38,7 +39,7 @@ export default function DatePicker({ value, onChange, placeholder = "Select date
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button variant="outline" className="justify-start w-full h-10">
+                <Button variant="outline" className={`justify-start w-full h-10 ${hasError ? 'border-danger-main' : ''}`}>
                     {displayText}
                 </Button>
             </PopoverTrigger>

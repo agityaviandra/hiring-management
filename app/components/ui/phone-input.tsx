@@ -10,9 +10,10 @@ interface PhoneInputProps {
     onChange: (value: string) => void;
     defaultCountryIso2?: string;
     placeholder?: string;
+    hasError?: boolean;
 }
 
-export default function PhoneInput({ value, onChange, defaultCountryIso2 = 'US', placeholder = 'Enter phone number' }: PhoneInputProps) {
+export default function PhoneInput({ value, onChange, defaultCountryIso2 = 'US', placeholder = 'Enter phone number', hasError = false }: PhoneInputProps) {
     const defaultCountry = useMemo<CountryCode>(() => {
         return COUNTRY_CODES.find(c => c.iso2 === defaultCountryIso2) || COUNTRY_CODES[0];
     }, [defaultCountryIso2]);
@@ -64,7 +65,7 @@ export default function PhoneInput({ value, onChange, defaultCountryIso2 = 'US',
     const fullValue = `+${country.dialCode} ${value}`.trim();
 
     return (
-        <div className="bg-white border-2 border-neutral-40 rounded-lg flex items-center px-4 py-2 h-10 focus-within:border-[3px] focus-within:border-primary-main/20">
+        <div className={`bg-white border-2 rounded-lg flex items-center px-4 py-2 h-10 focus-within:border-[3px] focus-within:border-primary-main/20 ${hasError ? 'border-danger-main' : 'border-neutral-40'}`}>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
                     <button type="button" className="flex items-center gap-1 pr-2 text-neutral-100">
