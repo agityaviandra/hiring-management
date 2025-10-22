@@ -13,10 +13,11 @@ This hiring management system provides a comprehensive platform for companies to
 - **Form Validation**: Robust form handling with Zod validation
 - **State Management**: Efficient state management with Zustand
 - **Hand Tracking**: Innovative hand gesture capture for accessibility
+- **Backend/Storage**: Uses browser Local Storage as the data store (no server API)
 
 ### Key Features
 
-- 🚀 Server-side rendering with React Router
+- 🚀 Client-side routing with React Router
 - ⚡️ Hot Module Replacement (HMR) for development
 - 📦 Asset bundling and optimization
 - 🔄 Data loading and mutations
@@ -31,7 +32,7 @@ This hiring management system provides a comprehensive platform for companies to
 
 ### Frontend
 - **React 19** - Modern React with latest features
-- **React Router 7** - Full-stack React framework
+- **React Router 7** - Client-side routing
 - **TypeScript** - Type-safe JavaScript
 - **Tailwind CSS 4** - Utility-first CSS framework
 - **Radix UI** - Accessible component primitives
@@ -55,6 +56,9 @@ This hiring management system provides a comprehensive platform for companies to
 - **Vite** - Fast build tool and dev server
 - **Yarn** - Package manager
 - **Docker** - Containerization support
+
+### Backend/Storage
+- Uses browser Local Storage as the backend data store (no external API/server)
 
 ### Special Features
 - **MediaPipe** - Hand tracking and gesture recognition
@@ -156,26 +160,6 @@ The containerized application can be deployed to any platform that supports Dock
 └── package.json           # Project dependencies and scripts
 ```
 
-### Optional Enhancements Added
-
-(All Role)
-- Popover on profile photo for logout
-- Responsive design for mobile & desktop
-
-(Role Admin)
-- Dropdown button for update status job data
-- Filters and select number row per page on table applicant
-- Show total data of applicant
-
-### Design or Logic Assumptions
-
-- Hand gesture counting start from 3 > 2 > 1
-
-## Known Limitations
-
-- Please make sure you clear cache and hard refresh your browser if some blank pages appeared
-- Dont forget to clear all local storage (optional)
-- All role email and password is visible in login page
 ---
 
 Built with ❤️ using React Router and modern web technologies.
