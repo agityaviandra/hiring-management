@@ -167,6 +167,15 @@ The containerized application can be deployed to any platform that supports Dock
 - Filters and select number row per page on table applicant
 - Show total data of applicant
 
+### Design or Logic Assumptions
+
+- Hand gesture counting start from 3 > 2 > 1
+
+## Known Limitations
+
+- Please make sure you clear cache your browser if some blank pages appeared
+- Dont forget to clear all local storage (optional)
+- All role email and password is visible in login page
 ---
 
 Built with ❤️ using React Router and modern web technologies.
