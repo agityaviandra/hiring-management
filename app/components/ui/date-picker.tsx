@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { Button } from "~/components/ui/button";
+import { CalendarDaysIcon, CalendarIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 // Custom navigation icons from public/
 import Calendar from "~/components/ui/calendar";
 
@@ -34,13 +35,17 @@ export default function DatePicker({ value, onChange, placeholder = "Select date
         setOpen(false);
     };
 
-    const displayText = selected ? selected.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : placeholder;
+    const displayText = selected ? selected.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' }) : placeholder;
 
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button variant="outline" className={`justify-start w-full h-10 ${hasError ? 'border-danger-main' : ''}`}>
-                    {displayText}
+                <Button variant="outline" className={`justify-between w-full h-10 px-4 ${hasError ? 'border-danger-main border-2' : 'border-neutral-40'}`}>
+                    <div className="flex items-center gap-2">
+                        <CalendarDaysIcon className="size-4 text-neutral-70" />
+                        <span className="text-m-regular text-neutral-70">{displayText}</span>
+                    </div>
+                    <ChevronDownIcon className="size-4 text-neutral-70" />
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-[376px] p-6 shadow-modal border border-neutral-40 rounded-2xl" align="start">

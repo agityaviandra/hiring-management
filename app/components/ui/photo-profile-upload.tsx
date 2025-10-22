@@ -607,7 +607,7 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
                         variant="outline"
                         onClick={handleTakePicture}
                         disabled={isLoading || isInitializing}
-                        className="flex items-center gap-1 !text-m-bold text-neutral-100"
+                        className={`flex items-center gap-1 !text-m-bold text-neutral-100 ${error ? 'border-danger-main border-2' : ''}`}
                     >
                         <ArrowUpTrayIcon className="size-4 stroke-3 text-neutral-100" />
                         {isLoading || isInitializing ? "Initializing..." : "Take Picture with Gesture"}
@@ -618,9 +618,6 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
                 <canvas ref={canvasRef} className="hidden" />
             </div>
 
-            {error && (
-                <p className="text-s-regular text-danger-main">{error}</p>
-            )}
         </div>
     );
 }
