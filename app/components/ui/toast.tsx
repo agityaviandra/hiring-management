@@ -79,7 +79,6 @@ const ToastComponent = ({ title, description, variant = "success" }: ToastProps)
     );
 };
 
-// Toast function with custom styling
 export const toast = {
     success: (props: Omit<ToastProps, "variant">) => {
         return sonnerToast.custom(() => (
@@ -114,5 +113,4 @@ export const toast = {
     },
 };
 
-// Export the Toaster component for setup
 export { Toaster } from "sonner";

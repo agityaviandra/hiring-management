@@ -5,8 +5,6 @@ export interface CountryCode {
     flag: string; // emoji
 }
 
-// Comprehensive list of country calling codes
-// Source consolidated from ITU E.164 and common references.
 export const COUNTRY_CODES: CountryCode[] = [
     { name: "United States", iso2: "US", dialCode: "1", flag: "🇺🇸" },
     { name: "Canada", iso2: "CA", dialCode: "1", flag: "🇨🇦" },

@@ -6,8 +6,6 @@ export default function CreateJobPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // This page will just show the modal and redirect back when closed
-        // The actual modal logic is handled by the modal component
     }, []);
 
     return (

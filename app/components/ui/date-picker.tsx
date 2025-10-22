@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "~/components/ui/popover";
 import { Button } from "~/components/ui/button";
 import { CalendarDaysIcon, CalendarIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
-// Custom navigation icons from public/
 import Calendar from "~/components/ui/calendar";
 
 interface DatePickerProps {

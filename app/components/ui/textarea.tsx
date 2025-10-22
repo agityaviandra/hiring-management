@@ -18,36 +18,29 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             const textarea = e.currentTarget;
             const { value, selectionStart, selectionEnd } = textarea;
 
-            // Handle Enter key for bullet lists
             if (e.key === 'Enter') {
                 const beforeCursor = value.substring(0, selectionStart);
                 const lines = beforeCursor.split('\n');
                 const currentLine = lines[lines.length - 1];
 
-                // Check if current line starts with bullet
                 if (currentLine.trim().startsWith('•') || currentLine.trim().startsWith('-')) {
                     e.preventDefault();
 
-                    // Get the indentation of the current line
                     const indentMatch = currentLine.match(/^(\s*)/);
                     const indent = indentMatch ? indentMatch[1] : '';
 
-                    // Insert new line with bullet and same indentation
                     const newValue =
                         value.substring(0, selectionStart) +
                         '\n' + indent + '• ' +
                         value.substring(selectionEnd);
 
-                    // Update the textarea value
                     textarea.value = newValue;
 
-                    // Set cursor position after the bullet
                     const newCursorPos = selectionStart + indent.length + 3;
                     setTimeout(() => {
                         textarea.setSelectionRange(newCursorPos, newCursorPos);
                     }, 0);
 
-                    // Trigger onChange if provided
                     const changeEvent = {
                         target: textarea,
                         currentTarget: textarea,
@@ -56,13 +49,11 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
                 }
             }
 
-            // Handle Backspace key for bullet lists
             if (e.key === 'Backspace') {
                 const beforeCursor = value.substring(0, selectionStart);
                 const lines = beforeCursor.split('\n');
                 const currentLine = lines[lines.length - 1];
 
-                // If cursor is right after bullet, remove the entire line
                 if (currentLine.trim() === '•' || currentLine.trim() === '-') {
                     e.preventDefault();
 

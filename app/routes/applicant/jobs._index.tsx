@@ -9,7 +9,6 @@ import { useAuthStore } from "~/stores/useAuthStore";
 import { Badge } from "~/components/ui/badge";
 import { EmptyState } from "~/components/ui/empty-state";
 
-// Image assets from Figma
 const imgAvatar = "/fb7a940d182bb96ad2c50258c61e53f50565984b.png";
 const imgCompanyLogo = "/d181d00d70b3f93bbfd2c083c74aae2e1d3bae5c.png";
 const imgLocationIcon = "/93a79efb2389e8c65ebbb953d2c46e30e6388ac6.svg";
@@ -30,7 +29,6 @@ export default function ApplicantJobsPage() {
         const { data: allJobs } = jobsStorage.getAll();
         const activeJobs = (allJobs || []).filter((job) => job.status === "active");
         setJobs(activeJobs);
-        // Set first job as selected by default
         if (activeJobs.length > 0) {
             setSelectedJob(activeJobs[0]);
         }
@@ -40,9 +38,10 @@ export default function ApplicantJobsPage() {
         <div className="min-h-screen bg-white">
             {/* Header */}
             <div className="bg-white h-16 shadow-modal">
-                <div className="container mx-auto px-6 py-4 max-w-7xl">
-                    <div className="h-full flex items-center justify-end">
-                        <div className="flex items-center gap-6">
+                <div className="container mx-auto px-4 sm:px-6 py-4 max-w-7xl">
+                    <div className="h-full flex items-center justify-between">
+                        <h1 className="text-lg sm:text-xl font-bold text-neutral-100">Available Jobs</h1>
+                        <div className="flex items-center gap-4 sm:gap-6">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <div className="relative size-7 rounded-full cursor-pointer hover:opacity-80 transition-opacity">
@@ -75,7 +74,7 @@ export default function ApplicantJobsPage() {
             </div>
 
             {/* Main Content */}
-            <div className="container mx-auto px-6 py-8 max-w-7xl">
+            <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl">
                 {jobs.length === 0 ? (
                     <EmptyState
                         title="No job openings available"
@@ -84,9 +83,9 @@ export default function ApplicantJobsPage() {
                         actionSize="lg"
                     />
                 ) : (
-                    <div className="grid grid-cols-1 lg:grid-cols-[384px_1fr] gap-6 h-[calc(100vh-12rem)]">
+                    <div className="grid grid-cols-1 lg:grid-cols-[384px_1fr] gap-4 sm:gap-6 h-[calc(100vh-8rem)] sm:h-[calc(100vh-12rem)]">
                         {/* Left Column - Job Cards */}
-                        <div className="overflow-y-auto space-y-6 custom-scrollbar">
+                        <div className="overflow-y-auto space-y-4 sm:space-y-6 custom-scrollbar">
                             {jobs.map((job) => (
                                 <div
                                     key={job.id}
@@ -96,10 +95,10 @@ export default function ApplicantJobsPage() {
                                         }`}
                                     onClick={() => setSelectedJob(job)}
                                 >
-                                    <div className="p-4">
+                                    <div className="p-3 sm:p-4">
                                         {/* Header with Logo and Job Info */}
-                                        <div className="flex gap-4 items-start mb-2">
-                                            <div className="border border-neutral-40 border-solid rounded shrink-0 w-[48px] h-[48px]">
+                                        <div className="flex gap-3 sm:gap-4 items-start mb-2">
+                                            <div className="border border-neutral-40 border-solid rounded shrink-0 w-[40px] h-[40px] sm:w-[48px] sm:h-[48px]">
                                                 <img
                                                     alt="Company Logo"
                                                     className="w-full h-full object-cover rounded"
@@ -107,8 +106,8 @@ export default function ApplicantJobsPage() {
                                                 />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <h3 className="text-l-bold text-neutral-100 truncate">{job.title}</h3>
-                                                <p className="text-m-regular text-neutral-70">Rakamin</p>
+                                                <h3 className="text-m-bold sm:text-l-bold text-neutral-100 truncate">{job.title}</h3>
+                                                <p className="text-s-regular sm:text-m-regular text-neutral-70">Rakamin</p>
                                             </div>
                                         </div>
 
@@ -116,17 +115,17 @@ export default function ApplicantJobsPage() {
                                         <div className="h-px border-t border-dashed border-neutral-40 mb-2"></div>
 
                                         {/* Job Details */}
-                                        <div className="space-y-2">
+                                        <div className="space-y-1 sm:space-y-2">
                                             {/* Location */}
-                                            <div className="flex gap-1 items-center justify-center">
-                                                <MapPinIcon className="size-4 text-neutral-80" />
-                                                <p className="text-s-regular text-neutral-80 flex-1 leading-0">Jakarta Selatan</p>
+                                            <div className="flex gap-1 items-center">
+                                                <MapPinIcon className="size-3 sm:size-4 text-neutral-80 flex-shrink-0" />
+                                                <p className="text-xs sm:text-s-regular text-neutral-80 flex-1 leading-tight">Jakarta Selatan</p>
                                             </div>
 
                                             {/* Salary */}
                                             <div className="flex gap-1 items-center">
-                                                <BanknotesIcon className="size-4 text-neutral-80" />
-                                                <p className="text-s-regular text-neutral-80 flex-1 leading-0">
+                                                <BanknotesIcon className="size-3 sm:size-4 text-neutral-80 flex-shrink-0" />
+                                                <p className="text-xs sm:text-s-regular text-neutral-80 flex-1 leading-tight">
                                                     {job.salary_range?.display_text || "Salary Negotiable"}
                                                 </p>
                                             </div>
@@ -137,43 +136,45 @@ export default function ApplicantJobsPage() {
                         </div>
 
                         {/* Right Column - Job Detail */}
-                        <div className="border border-neutral-40 border-solid rounded-lg p-6 bg-white overflow-y-auto 
-                        h-[calc(100vh-8rem)] custom-scrollbar">
+                        <div className="border border-neutral-40 border-solid rounded-lg p-4 sm:p-6 bg-white overflow-y-auto 
+                        h-full sm:h-[calc(100vh-8rem)] custom-scrollbar">
                             {selectedJob ? (
                                 <>
                                     {/* Sticky Header */}
-                                    <div className="sticky top-0 bg-white pb-6 border-b border-neutral-40 mb-6">
-                                        <div className="flex gap-6 items-start">
-                                            <div className="border border-neutral-40 border-solid rounded shrink-0 w-[48px] h-[48px]">
-                                                <img
-                                                    alt="Company Logo"
-                                                    className="w-full h-full object-cover rounded"
-                                                    src={imgCompanyLogo}
-                                                />
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                {/* Work Type Badge */}
-                                                {selectedJob.jobType && (
-                                                    <div className="mb-2">
-                                                        <div className="bg-success-main px-2 py-0.5 rounded text-s-bold text-white inline-block">
-                                                            {selectedJob.jobType === 'full-time' ? 'Full-Time' :
-                                                                selectedJob.jobType === 'part-time' ? 'Part-Time' :
-                                                                    selectedJob.jobType === 'contract' ? 'Contract' :
-                                                                        selectedJob.jobType === 'internship' ? 'Internship' : selectedJob.jobType}
+                                    <div className="sticky top-0 bg-white pb-4 sm:pb-6 border-b border-neutral-40 mb-4 sm:mb-6">
+                                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 items-start sm:justify-between">
+                                            <div className="flex gap-4 items-start w-full sm:w-auto">
+                                                <div className="border border-neutral-40 border-solid rounded shrink-0 w-[40px] h-[40px] sm:w-[48px] sm:h-[48px]">
+                                                    <img
+                                                        alt="Company Logo"
+                                                        className="w-full h-full object-cover rounded"
+                                                        src={imgCompanyLogo}
+                                                    />
+                                                </div>
+                                                <div className="flex-1 min-w-0">
+                                                    {/* Work Type Badge */}
+                                                    {selectedJob.jobType && (
+                                                        <div className="mb-2">
+                                                            <div className="bg-success-main px-2 py-0.5 rounded text-xs sm:text-s-bold text-white inline-block">
+                                                                {selectedJob.jobType === 'full-time' ? 'Full-Time' :
+                                                                    selectedJob.jobType === 'part-time' ? 'Part-Time' :
+                                                                        selectedJob.jobType === 'contract' ? 'Contract' :
+                                                                            selectedJob.jobType === 'internship' ? 'Internship' : selectedJob.jobType}
+                                                            </div>
                                                         </div>
+                                                    )}
+                                                    {/* Job Title and Company */}
+                                                    <div className="space-y-1">
+                                                        <h2 className="text-l-bold sm:text-xl-bold text-neutral-100">{selectedJob.title}</h2>
+                                                        <p className="text-s-regular sm:text-m-regular text-neutral-70">Rakamin</p>
                                                     </div>
-                                                )}
-                                                {/* Job Title and Company */}
-                                                <div className="space-y-1">
-                                                    <h2 className="text-xl-bold text-neutral-100">{selectedJob.title}</h2>
-                                                    <p className="text-m-regular text-neutral-70">Rakamin</p>
                                                 </div>
                                             </div>
-                                            <div className="shrink-0">
-                                                <Link to={`/applicant/jobs/${selectedJob.id}`}>
+                                            <div className="w-full sm:w-auto sm:shrink-0">
+                                                <Link to={`/applicant/jobs/${selectedJob.id}`} className="block">
                                                     <Button
                                                         variant="alternative-primary"
-                                                        className="!text-m-bold text-neutral-90 shadow-button"
+                                                        className="w-full sm:w-auto !text-s-bold sm:!text-m-bold text-neutral-90 shadow-button"
                                                     >
                                                         Apply
                                                     </Button>
@@ -183,20 +184,20 @@ export default function ApplicantJobsPage() {
                                     </div>
 
                                     {/* Job Responsibilities */}
-                                    <div className="space-y-6">
+                                    <div className="space-y-4 sm:space-y-6">
                                         {selectedJob.description ? (
-                                            <div className="text-m-regular text-neutral-100 whitespace-pre-line">
+                                            <div className="text-s-regular sm:text-m-regular text-neutral-100 whitespace-pre-line">
                                                 {selectedJob.description}
                                             </div>
                                         ) : (
-                                            <p className="text-m-regular text-neutral-70">No description provided.</p>
+                                            <p className="text-s-regular sm:text-m-regular text-neutral-70">No description provided.</p>
                                         )}
                                     </div>
                                 </>
                             ) : (
-                                <div className="flex flex-col items-center justify-center h-[400px] text-center">
+                                <div className="flex flex-col items-center justify-center h-[300px] sm:h-[400px] text-center px-4">
                                     <svg
-                                        className="mx-auto h-12 w-12 text-neutral-60"
+                                        className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-neutral-60"
                                         fill="none"
                                         viewBox="0 0 24 24"
                                         stroke="currentColor"
@@ -210,8 +211,8 @@ export default function ApplicantJobsPage() {
                                             d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                                         />
                                     </svg>
-                                    <h3 className="mt-3 text-m-bold text-neutral-100">Select a job to view details</h3>
-                                    <p className="mt-1 text-s-regular text-neutral-70">Choose a job from the list to see its requirements and responsibilities.</p>
+                                    <h3 className="mt-3 text-s-bold sm:text-m-bold text-neutral-100">Select a job to view details</h3>
+                                    <p className="mt-1 text-xs sm:text-s-regular text-neutral-70">Choose a job from the list to see its requirements and responsibilities.</p>
                                 </div>
                             )}
                         </div>

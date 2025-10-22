@@ -156,6 +156,17 @@ The containerized application can be deployed to any platform that supports Dock
 └── package.json           # Project dependencies and scripts
 ```
 
+### Optional Enhancements Added
+
+(All Role)
+- Popover on profile photo for logout
+- Responsive design for mobile & desktop
+
+(Role Admin)
+- Dropdown button for update status job data
+- Filters and select number row per page on table applicant
+- Show total data of applicant
+
 ---
 
 Built with ❤️ using React Router and modern web technologies.

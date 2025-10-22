@@ -24,7 +24,6 @@ import {
 } from "~/lib/validations/application-form";
 import { type JobListItem, type JobConfiguration } from "~/types";
 
-// Domicile options
 const domicileOptions = [
     { value: "Kabupaten Aceh Barat - Aceh", label: "Kabupaten Aceh Barat - Aceh" },
     { value: "Kabupaten Aceh Besar - Aceh", label: "Kabupaten Aceh Besar - Aceh" },
@@ -163,7 +162,6 @@ export default function ApplicantJobDetailPage() {
     const [countdown, setCountdown] = useState(4);
     const [linkedinUrlFound, setLinkedinUrlFound] = useState(false);
 
-    // Function to validate LinkedIn URL
     const validateLinkedInUrl = (url: string) => {
         if (!url) {
             setLinkedinUrlFound(false);
@@ -175,21 +173,17 @@ export default function ApplicantJobDetailPage() {
         setLinkedinUrlFound(isValid);
     };
 
-    // Function to get job configuration from localStorage
     const getJobConfiguration = (jobId: string): JobConfiguration | null => {
         if (typeof window === 'undefined') return null;
 
-        // Try to get configuration using the jobConfigStorage utility first
         const config = jobConfigStorage.get(jobId);
         if (config) return config;
 
-        // Fallback: try to get configuration using the pattern from the example
         const configKey = `hiring-app-job-config_${jobId}`;
         const data = localStorage.getItem(configKey);
         return data ? JSON.parse(data) : null;
     };
 
-    // Create dynamic schema based on job configuration
     const dynamicSchema = createDynamicApplicationSchema(jobConfig);
 
     const form = useForm<any>({
@@ -211,7 +205,6 @@ export default function ApplicantJobDetailPage() {
             const jobData = jobsStorage.getById(id);
             if (jobData) {
                 setJob(jobData);
-                // Load job configuration
                 const config = getJobConfiguration(id);
                 setJobConfig(config);
             }
@@ -219,7 +212,6 @@ export default function ApplicantJobDetailPage() {
         }
     }, [id]);
 
-    // Handle countdown timer
     useEffect(() => {
         if (showSuccessAlert && countdown > 0) {
             const timer = setTimeout(() => {
@@ -235,9 +227,6 @@ export default function ApplicantJobDetailPage() {
         try {
             if (!job) return;
 
-            // Zod validation will handle the dynamic validation automatically
-
-            // Create application
             const application = applicationsStorage.create({
                 jobId: job.id,
                 applicantEmail: data.email,
@@ -248,7 +237,6 @@ export default function ApplicantJobDetailPage() {
 
             console.log("Application submitted:", application);
 
-            // Show success alert and reset countdown
             setCountdown(6);
             setShowSuccessAlert(true);
         } catch (error) {
@@ -293,8 +281,8 @@ export default function ApplicantJobDetailPage() {
                     {/* Form */}
                     <div className="p-10">
                         <div className="flex gap-4 items-start mb-6">
-                            <div className="flex-1 flex items-center justify-between">
-                                <div className="flex items-center gap-4">
+                            <div className="flex-1 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+                                <div className="flex flex-row items-center justify-center gap-4">
                                     <Button
                                         size={"icon"}
                                         variant="outline"
@@ -517,7 +505,7 @@ export default function ApplicantJobDetailPage() {
                                                 {/* Info Address Component */}
                                                 {linkedinUrlFound && (
                                                     <div className="flex gap-1 items-center h-5">
-                                                        <img src="/success_link.svg" alt="Success" className="w-4 h-4" />
+                                                        <img src="/success_link.svg" alt="Success" className="w-8 h-8" />
                                                         <p className="text-xs text-primary-main leading-0">
                                                             URL address found
                                                         </p>

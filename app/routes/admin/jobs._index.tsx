@@ -36,7 +36,6 @@ export default function AdminJobsPage() {
     };
 
     useEffect(() => {
-        // Set the dropdown container to the main content area to avoid body portal issues
         const container = document.getElementById('main-content') || document.body;
         setDropdownContainer(container);
     }, []);

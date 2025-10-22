@@ -27,7 +27,6 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
     const countdownIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const lastPoseTimeRef = useRef<number>(0);
 
-    // Initialize hand tracker
     const initializeHandTracker = async () => {
         if (handTrackerRef.current) return;
 
@@ -51,7 +50,6 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
             setCompletedPoses([]);
             setCurrentPose(0);
 
-            // Initialize hand tracker first
             await initializeHandTracker();
 
             const stream = await navigator.mediaDevices.getUserMedia({
@@ -66,14 +64,12 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
             if (videoRef.current) {
                 videoRef.current.srcObject = stream;
 
-                // Wait for video to be ready
                 await new Promise((resolve) => {
                     if (videoRef.current) {
                         videoRef.current.onloadedmetadata = resolve;
                     }
                 });
 
-                // Start hand tracking
                 if (handTrackerRef.current && videoRef.current) {
                     handTrackerRef.current.startTracking(videoRef.current, (detections: HandDetection[]) => {
                         const pose = detectHandPose(detections);
@@ -82,27 +78,22 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
                         console.log("Detected pose:", pose, "Detections:", detections.length);
                         setCurrentPose(pose);
 
-                        // Debounce pose detection to avoid rapid changes
                         if (currentTime - lastPoseTimeRef.current < 200) {
                             return;
                         }
                         lastPoseTimeRef.current = currentTime;
 
-                        // Update pose sequence with better logic
                         setPoseSequence(prev => {
                             let newSequence = [...prev];
 
-                            // Only add pose if it's different from the last one
                             if (newSequence.length === 0 || newSequence[newSequence.length - 1] !== pose) {
                                 newSequence.push(pose);
                             }
 
-                            // Keep only last 3 poses
                             newSequence = newSequence.slice(-3);
 
                             console.log("Current sequence:", newSequence);
 
-                            // Check for the correct sequence: 3, 2, 1
                             if (newSequence.length === 3 &&
                                 newSequence[0] === 3 &&
                                 newSequence[1] === 2 &&
@@ -110,21 +101,16 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
 
                                 console.log("✅ Sequence completed! Starting countdown...");
 
-                                // Mark all poses as completed
                                 setCompletedPoses([3, 2, 1]);
 
-                                // Start countdown
                                 startCountdown();
 
-                                // Reset sequence
                                 return [];
                             }
 
-                            // Update completed poses based on sequence progression
                             setCompletedPoses(prevCompleted => {
                                 const newCompleted = [...prevCompleted];
 
-                                // Check each position in the sequence
                                 if (newSequence.length >= 1 && newSequence[0] === 3 && !newCompleted.includes(3)) {
                                     newCompleted.push(3);
                                     console.log("✅ Completed pose 3");
@@ -158,7 +144,6 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
     const startCountdown = () => {
         console.log("Starting countdown...");
 
-        // Clear any existing countdown
         if (countdownIntervalRef.current) {
             clearInterval(countdownIntervalRef.current);
         }
@@ -198,7 +183,6 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
             return;
         }
 
-        // Check if video is ready and playing
         if (video.videoWidth === 0 || video.videoHeight === 0) {
             console.error("Video dimensions not ready:", video.videoWidth, video.videoHeight);
             return;
@@ -211,21 +195,17 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
 
         console.log("Capturing photo with dimensions:", video.videoWidth, "x", video.videoHeight);
 
-        // Show flash effect
         setShowFlash(true);
         setTimeout(() => setShowFlash(false), 200);
 
-        // Set canvas size to match video
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
 
-        // Draw video frame to canvas (mirror the image for selfie effect)
         ctx.save();
         ctx.scale(-1, 1);
         ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
         ctx.restore();
 
-        // Convert to base64
         const imageData = canvas.toDataURL('image/jpeg', 0.9);
         console.log("Captured image data length:", imageData.length);
 
@@ -233,7 +213,6 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
             setCapturedImage(imageData);
             console.log("✅ Image captured successfully");
 
-            // Stop hand tracking and camera AFTER a small delay to ensure image is set
             setTimeout(() => {
                 if (handTrackerRef.current) {
                     handTrackerRef.current.stopTracking();
@@ -250,7 +229,6 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
     };
 
     const stopCamera = () => {
-        // Clear countdown interval
         if (countdownIntervalRef.current) {
             clearInterval(countdownIntervalRef.current);
             countdownIntervalRef.current = null;
@@ -288,7 +266,6 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
         setPoseSequence([]);
         setCompletedPoses([]);
 
-        // Restart camera
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
@@ -302,7 +279,6 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
             if (videoRef.current) {
                 videoRef.current.srcObject = stream;
 
-                // Wait for video to be ready
                 await new Promise((resolve) => {
                     if (videoRef.current) {
                         videoRef.current.onloadedmetadata = resolve;
@@ -318,27 +294,22 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
                         console.log("Detected pose:", pose, "Detections:", detections.length);
                         setCurrentPose(pose);
 
-                        // Debounce pose detection to avoid rapid changes
                         if (currentTime - lastPoseTimeRef.current < 200) {
                             return;
                         }
                         lastPoseTimeRef.current = currentTime;
 
-                        // Update pose sequence with better logic
                         setPoseSequence(prev => {
                             let newSequence = [...prev];
 
-                            // Only add pose if it's different from the last one
                             if (newSequence.length === 0 || newSequence[newSequence.length - 1] !== pose) {
                                 newSequence.push(pose);
                             }
 
-                            // Keep only last 3 poses
                             newSequence = newSequence.slice(-3);
 
                             console.log("Current sequence:", newSequence);
 
-                            // Check for the correct sequence: 3, 2, 1
                             if (newSequence.length === 3 &&
                                 newSequence[0] === 3 &&
                                 newSequence[1] === 2 &&
@@ -346,21 +317,16 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
 
                                 console.log("✅ Sequence completed! Starting countdown...");
 
-                                // Mark all poses as completed
                                 setCompletedPoses([3, 2, 1]);
 
-                                // Start countdown
                                 startCountdown();
 
-                                // Reset sequence
                                 return [];
                             }
 
-                            // Update completed poses based on sequence progression
                             setCompletedPoses(prevCompleted => {
                                 const newCompleted = [...prevCompleted];
 
-                                // Check each position in the sequence
                                 if (newSequence.length >= 1 && newSequence[0] === 3 && !newCompleted.includes(3)) {
                                     newCompleted.push(3);
                                     console.log("✅ Completed pose 3");
@@ -400,10 +366,8 @@ export function PhotoProfileUpload({ value, onChange, error }: PhotoProfileUploa
         }
     };
 
-    // Cleanup on unmount
     useEffect(() => {
         return () => {
-            // Clear countdown interval
             if (countdownIntervalRef.current) {
                 clearInterval(countdownIntervalRef.current);
                 countdownIntervalRef.current = null;

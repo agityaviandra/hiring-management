@@ -118,7 +118,6 @@ export default function ManageJobPage() {
             const jobData = jobsStorage.getById(id);
             if (jobData) {
                 setJob(jobData as unknown as Job);
-                // Get applications for this job
                 const jobApplications = applicationsStorage.getByJobId(id);
                 setApplications(jobApplications);
             }
@@ -142,7 +141,6 @@ export default function ManageJobPage() {
             const linkedin = String(app.fieldData.linkedin_link || app.fieldData.linkedinUrl || '').toLowerCase();
             const appliedDate = formatDate(app.submittedAt).toLowerCase();
 
-            // Global OR across all fields
             const matchesGlobal = !hasGlobal || (
                 name.includes(globalLower) || email.includes(globalLower) || phone.includes(globalLower) ||
                 gender.includes(globalLower) || domicile.includes(globalLower) || linkedin.includes(globalLower) ||
@@ -151,12 +149,10 @@ export default function ManageJobPage() {
 
             if (!matchesGlobal) return false;
 
-            // Field-specific filters: AND over active filters
             if (active.name && !name.includes(active.name.toLowerCase())) return false;
             if (active.email && !email.includes(active.email.toLowerCase())) return false;
             if (active.phone && !phone.includes(active.phone.toLowerCase())) return false;
             if (active.gender && gender !== active.gender.toLowerCase()) return false;
-            // linkedin filter removed
             if (active.domicile && !domicile.includes(active.domicile.toLowerCase())) return false;
             if (active.appliedDate && !appliedDate.includes(active.appliedDate.toLowerCase())) return false;
             return true;
@@ -366,7 +362,7 @@ export default function ManageJobPage() {
 
                 {/* Search and Filters */}
                 <div className="bg-white rounded-lg border border-neutral-40 p-6 mb-6">
-                    <div className="flex items-center gap-4">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                         <div className="flex-1">
                             <Input
                                 placeholder="Global search..."
@@ -378,36 +374,38 @@ export default function ManageJobPage() {
                                 className="h-10 border-2 border-neutral-30 focus:border-primary-main focus:ring-2 focus:ring-primary-focus"
                             />
                         </div>
-                        <FilterPopOver
-                            filters={filters}
-                            onChange={(next) => {
-                                setFilters(next);
-                                setCurrentPage(1);
-                            }}
-                            onClear={() => {
-                                setFilters({ name: '', email: '', phone: '', gender: '', domicile: '', appliedDate: '' });
-                                setCurrentPage(1);
-                            }}
-                        />
-                        <div className="flex items-center gap-2">
-                            <span className="text-s-regular text-neutral-70">Rows per page</span>
-                            <Select
-                                value={pageSize.toString()}
-                                onValueChange={(value) => {
-                                    setPageSize(Number(value));
+                        <div className="flex items-center gap-2 justify-between xs:justify-start">
+                            <FilterPopOver
+                                filters={filters}
+                                onChange={(next) => {
+                                    setFilters(next);
                                     setCurrentPage(1);
                                 }}
-                            >
-                                <SelectTrigger className="w-20 h-10">
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent className="min-w-[100px]">
-                                    <SelectItem value="5">5</SelectItem>
-                                    <SelectItem value="10">10</SelectItem>
-                                    <SelectItem value="20">20</SelectItem>
-                                    <SelectItem value="50">50</SelectItem>
-                                </SelectContent>
-                            </Select>
+                                onClear={() => {
+                                    setFilters({ name: '', email: '', phone: '', gender: '', domicile: '', appliedDate: '' });
+                                    setCurrentPage(1);
+                                }}
+                            />
+                            <div className="flex items-center gap-2">
+                                <span className="text-s-regular text-neutral-70">Rows per page</span>
+                                <Select
+                                    value={pageSize.toString()}
+                                    onValueChange={(value) => {
+                                        setPageSize(Number(value));
+                                        setCurrentPage(1);
+                                    }}
+                                >
+                                    <SelectTrigger className="w-20 h-10">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent className="min-w-[100px]">
+                                        <SelectItem value="5">5</SelectItem>
+                                        <SelectItem value="10">10</SelectItem>
+                                        <SelectItem value="20">20</SelectItem>
+                                        <SelectItem value="50">50</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
                     </div>
 
@@ -444,7 +442,16 @@ export default function ManageJobPage() {
                                 {/* <Button variant="outline" size="sm" className="text-primary-main border-primary-border hover:bg-primary-main hover:text-white">
                                     Bulk Actions
                                 </Button> */}
-                                <Button size="sm" className="bg-primary-main hover:bg-primary-hover text-white">
+                                <Button
+                                    size="sm"
+                                    className="bg-primary-main hover:bg-primary-hover text-white"
+                                    onClick={() => {
+                                        const data = Array.from(selectedApplications)
+                                            .map(id => pagedApplications.find(app => app.id === id))
+                                            .filter(Boolean);
+                                        alert(JSON.stringify(data, null, 2));
+                                    }}
+                                >
                                     Export Selected
                                 </Button>
                             </div>

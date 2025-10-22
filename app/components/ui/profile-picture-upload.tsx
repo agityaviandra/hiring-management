@@ -57,17 +57,13 @@ export function ProfilePictureUpload({ onImageCapture, currentImage, disabled }:
 
         if (!context) return;
 
-        // Set canvas dimensions to match video
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
 
-        // Draw the current frame from video to canvas
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Convert canvas to base64 image
         const imageData = canvas.toDataURL('image/jpeg', 0.8);
 
-        // Stop camera and capture photo
         stopCamera();
         onImageCapture(imageData);
 
@@ -78,8 +74,6 @@ export function ProfilePictureUpload({ onImageCapture, currentImage, disabled }:
     }, [stopCamera, onImageCapture]);
 
     const handleGestureCapture = useCallback(() => {
-        // This would integrate with hand gesture detection
-        // For now, we'll simulate it with a simple click
         capturePhoto();
     }, [capturePhoto]);
 

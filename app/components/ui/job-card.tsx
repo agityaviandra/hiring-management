@@ -80,16 +80,16 @@ export function JobCard({ job, onStatusUpdate }: JobCardProps) {
         }
     };
     return (
-        <div className="bg-neutral-10 box-border flex flex-col gap-3 items-start p-6 relative rounded-2xl w-full transition-all duration-200 shadow-modal">
+        <div className="bg-neutral-10 box-border flex flex-col gap-3 items-start p-4 sm:p-6 relative rounded-2xl w-full transition-all duration-200 shadow-modal">
             {/* Status + Start Date Row */}
-            <div className="flex items-start justify-between relative shrink-0 w-full">
-                <div className="flex gap-4 items-center min-h-px min-w-px relative shrink-0">
+            <div className="flex flex-col xs:flex-row xs:items-start xs:justify-between relative shrink-0 w-full gap-2 xs:gap-0">
+                <div className="flex gap-2 sm:gap-4 items-center min-h-px min-w-px relative shrink-0 flex-wrap">
                     {/* Job Status Badge */}
                     <JobStatusBadge status={job.status} />
 
                     {/* Start Date Badge */}
-                    <div className="border border-neutral-40 border-solid box-border flex gap-2 items-center px-4 py-1 relative rounded shrink-0">
-                        <p className="font-normal leading-6 relative shrink-0 text-sm text-neutral-70 text-nowrap whitespace-pre">
+                    <div className="border border-neutral-40 border-solid box-border flex gap-2 items-center px-3 py-1 sm:px-4 sm:py-1 relative rounded shrink-0 mt-0">
+                        <p className="font-normal leading-6 relative shrink-0 text-xs sm:text-sm text-neutral-70 text-nowrap whitespace-pre">
                             started on {job.list_card.started_on_text}
                         </p>
                     </div>
@@ -97,15 +97,15 @@ export function JobCard({ job, onStatusUpdate }: JobCardProps) {
             </div>
 
             {/* Content Row */}
-            <div className="flex items-end justify-between relative shrink-0 w-full">
-                <div className="flex flex-col gap-3 items-start relative shrink-0 w-[495px]">
-                    <div className="flex flex-col gap-2 items-start justify-center relative shrink-0 w-full">
+            <div className="flex flex-col-reverse sm:flex-row items-end sm:items-end justify-between relative shrink-0 w-full gap-3 sm:gap-0">
+                <div className="flex flex-col gap-2 sm:gap-3 items-start relative shrink-0 w-full sm:w-[495px]">
+                    <div className="flex flex-col gap-1 sm:gap-2 items-start justify-center relative shrink-0 w-full">
                         {/* Job Title */}
-                        <p className="font-bold leading-7 relative shrink-0 text-neutral-100 text-lg text-nowrap whitespace-pre capitalize">
+                        <p className="font-bold leading-7 relative shrink-0 text-neutral-100 text-base sm:text-lg text-nowrap whitespace-pre capitalize line-clamp-2 max-w-full">
                             {job.title}
                         </p>
                         {/* Salary Range */}
-                        <div className="flex font-normal gap-1 items-start leading-7 relative shrink-0 text-neutral-80 text-base text-nowrap whitespace-pre">
+                        <div className="flex font-normal gap-1 items-start leading-7 relative shrink-0 text-neutral-80 text-sm sm:text-base text-nowrap whitespace-pre">
                             <p className="relative shrink-0">
                                 Rp{job.salary_range.min.toLocaleString('id-ID')}
                             </p>
@@ -120,10 +120,10 @@ export function JobCard({ job, onStatusUpdate }: JobCardProps) {
                 </div>
 
                 {/* Status Update + CTA Buttons */}
-                <div className="flex gap-2.5 items-end justify-end relative shrink-0">
+                <div className="flex gap-2 items-end justify-end relative shrink-0 w-full sm:w-auto mb-2 sm:mb-0">
                     {/* Status Update Dropdown */}
                     <Select value={job.status} onValueChange={handleStatusChange}>
-                        <SelectTrigger className="h-8 min-h-0 px-3 py-1 text-xs w-24 text-xs-bold rounded-lg border-2 border-neutral-40" style={{ height: '32px' }}>
+                        <SelectTrigger className="h-8 min-h-0 px-2 sm:px-3 py-1 text-xs w-full sm:w-24 text-xs-bold rounded-lg border-2 border-neutral-40" style={{ height: '32px' }}>
                             <SelectValue />
                         </SelectTrigger>
                         <SelectContent className="min-w-[100px] w-28">
@@ -134,7 +134,7 @@ export function JobCard({ job, onStatusUpdate }: JobCardProps) {
                     </Select>
 
                     {/* Manage Job Button */}
-                    <Button variant={"default"} size={"sm"} asChild>
+                    <Button variant={"default"} size={"sm"} className="w-full sm:w-auto" asChild>
                         <Link to={`/admin/jobs/${job.id}`}>
                             Manage Job
                         </Link>

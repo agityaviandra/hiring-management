@@ -34,16 +34,13 @@ export default function PhoneInput({ value, onChange, defaultCountryIso2 = 'US',
     const stripAnyDialPrefix = (v: string) => v.replace(/^\s*\+?\d+\s*/, "");
     const stripSelectedDialPrefix = (v: string, dial: string) => v.replace(new RegExp(`^\\s*\\+?${dial}\\s*`), "");
 
-    // Derive local part from the external value
     const localValue = useMemo(() => {
         if (!value) return "";
-        // Prefer current country, fallback to any +digits prefix
         const fromSelected = stripSelectedDialPrefix(value, country.dialCode);
         if (fromSelected !== value) return fromSelected;
         return stripAnyDialPrefix(value);
     }, [value, country.dialCode]);
 
-    // If value has a dial code that maps to another country, sync the selector
     useEffect(() => {
         if (!value) return;
         const match = value.match(/^\s*\+(\d+)/);

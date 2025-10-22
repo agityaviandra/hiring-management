@@ -2,7 +2,6 @@ export type JobStatus = 'active' | 'draft' | 'closed' | 'inactive';
 export type ApplicationStatus = 'pending' | 'reviewed' | 'shortlisted' | 'rejected' | 'hired';
 export type FieldVisibility = 'mandatory' | 'optional' | 'hidden';
 
-// Job List Structure
 export interface SalaryRange {
     min: number;
     max: number;
@@ -31,7 +30,6 @@ export interface JobListResponse {
     data: JobListItem[];
 }
 
-// Job Configuration Structure (Admin) - Updated to support 3-state visibility
 export interface FieldValidation {
     required?: boolean; // Backend compatibility
     visibility?: FieldVisibility; // Frontend state management
@@ -55,7 +53,6 @@ export interface JobConfiguration {
     application_form: ApplicationForm;
 }
 
-// Candidate List Structure
 export interface CandidateAttribute {
     key: string;
     label: string;
@@ -72,7 +69,6 @@ export interface CandidateListResponse {
     data: Candidate[];
 }
 
-// Legacy interfaces for backward compatibility (can be removed later)
 export interface Job {
     id: string;
     slug: string;
@@ -94,7 +90,6 @@ export interface Application {
     notes?: string;
 }
 
-// Standard application fields that can be configured
 export const STANDARD_FIELDS: ApplicationField[] = [
     { key: 'full_name', validation: { required: true, visibility: 'mandatory' } },
     { key: 'photo_profile', validation: { required: true, visibility: 'mandatory' } },

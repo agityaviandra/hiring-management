@@ -37,7 +37,6 @@ export function HandGestureCapture({ onImageCapture, currentImage, disabled }: H
                 videoRef.current.srcObject = mediaStream;
             }
 
-            // Start gesture detection simulation
             startGestureDetection();
         } catch (error) {
             console.error('Error accessing camera:', error);
@@ -49,8 +48,6 @@ export function HandGestureCapture({ onImageCapture, currentImage, disabled }: H
     }, []);
 
     const startGestureDetection = useCallback(() => {
-        // This is a simplified gesture detection simulation
-        // In a real implementation, you would use MediaPipe or similar library
         const gestures = [
             "Raise your hand to start gesture detection...",
             "Hand detected! Make a 'V' sign to capture photo",
@@ -96,17 +93,13 @@ export function HandGestureCapture({ onImageCapture, currentImage, disabled }: H
 
         if (!context) return;
 
-        // Set canvas dimensions to match video
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
 
-        // Draw the current frame from video to canvas
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Convert canvas to base64 image
         const imageData = canvas.toDataURL('image/jpeg', 0.8);
 
-        // Stop camera and capture photo
         stopCamera();
         onImageCapture(imageData);
 
@@ -124,7 +117,6 @@ export function HandGestureCapture({ onImageCapture, currentImage, disabled }: H
         });
     }, [onImageCapture]);
 
-    // Cleanup on unmount
     useEffect(() => {
         return () => {
             if (gestureTimeoutRef.current) {

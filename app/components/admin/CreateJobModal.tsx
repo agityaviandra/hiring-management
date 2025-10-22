@@ -128,12 +128,12 @@ export function CreateJobModal({ isOpen, onClose, onJobSaved }: CreateJobModalPr
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="!max-w-5xl max-h-[90vh] overflow-y-auto p-0 scrollbar-hide">
+            <DialogContent className="max-w-[95vw] sm:max-w-2xl md:max-w-4xl lg:max-w-5xl max-h-[95vh] overflow-y-auto p-0 scrollbar-hide">
                 {/* Header */}
-                <div className="bg-white border-b border-neutral-40 px-6 py-6 rounded-t-lg">
+                <div className="bg-white border-b border-neutral-40 px-4 sm:px-6 py-4 sm:py-6 rounded-t-lg">
                     <div className="flex items-center justify-between">
                         <DialogHeader>
-                            <DialogTitle>Job Opening</DialogTitle>
+                            <DialogTitle className="text-lg sm:text-xl">Job Opening</DialogTitle>
                         </DialogHeader>
                         <button
                             onClick={onClose}
@@ -145,7 +145,7 @@ export function CreateJobModal({ isOpen, onClose, onJobSaved }: CreateJobModalPr
                 </div>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-6 pt-0">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6 p-4 sm:p-6 pt-0">
                         {/* Basic Job Information */}
                         <div className="space-y-6">
                             <FormField
@@ -245,7 +245,7 @@ export function CreateJobModal({ isOpen, onClose, onJobSaved }: CreateJobModalPr
                                     <div className="text-s-regular text-neutral-70">Job Salary</div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <FormField
                                         control={form.control}
                                         name="salaryMin"
@@ -324,17 +324,17 @@ export function CreateJobModal({ isOpen, onClose, onJobSaved }: CreateJobModalPr
                         </div>
 
                         {/* Application Fields Configuration */}
-                        <div className="bg-white border border-neutral-30 rounded-lg p-4 space-y-4">
-                            <h3 className="text-m-bold text-neutral-70">Minimum Profile Information Required</h3>
+                        <div className="bg-white border border-neutral-30 rounded-lg p-3 sm:p-4 space-y-3 sm:space-y-4">
+                            <h3 className="text-sm sm:text-base font-bold text-neutral-70">Minimum Profile Information Required</h3>
 
                             <div className="space-y-2">
                                 {applicationFields.map((field) => (
-                                    <div key={field.key} className="flex items-center justify-between p-2 border-b border-neutral-30 last:border-b-0">
+                                    <div key={field.key} className="flex flex-col sm:flex-row sm:items-center justify-between p-2 border-b border-neutral-30 last:border-b-0 gap-2 sm:gap-0">
                                         <div className="flex-1">
-                                            <p className="text-m-regular text-neutral-70">{field.key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
+                                            <p className="text-xs sm:text-sm text-neutral-70">{field.key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
                                         </div>
 
-                                        <div className="flex gap-2">
+                                        <div className="flex gap-1 sm:gap-2 flex-wrap">
                                             {(['mandatory', 'optional', 'hidden'] as const).map((visibility) => (
                                                 <Button
                                                     key={visibility}
@@ -347,7 +347,7 @@ export function CreateJobModal({ isOpen, onClose, onJobSaved }: CreateJobModalPr
                                                     variant="outline"
                                                     size="sm"
                                                     onClick={() => handleFieldVisibilityChange(field.key, visibility)}
-                                                    className={`px-3 py-1 text-xs rounded-full ${field.validation.visibility === visibility
+                                                    className={`px-2 sm:px-3 py-1 text-xs rounded-full ${field.validation.visibility === visibility
                                                         ? "bg-white border-primary-main text-primary-main"
                                                         : 'bg-neutral-20 border-neutral-40 text-neutral-70'
                                                         }`}
@@ -362,11 +362,12 @@ export function CreateJobModal({ isOpen, onClose, onJobSaved }: CreateJobModalPr
                         </div>
 
                         {/* Footer */}
-                        <div className="flex justify-end pt-6 border-t border-neutral-30">
+                        <div className="flex justify-end pt-4 sm:pt-6 border-t border-neutral-30">
                             <Button
                                 variant={"default"}
                                 type="submit"
                                 disabled={!form.formState.dirtyFields}
+                                className="w-full sm:w-auto"
                             >
                                 {form.formState.isSubmitting ? 'Publishing...' : 'Publish Job'}
                             </Button>
