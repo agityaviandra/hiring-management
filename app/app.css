@@ -2,8 +2,6 @@
 @import "tw-animate-css";
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
-@custom-variant dark (&:is(.dark *));
-
 @theme {
   --font-sans: "Nunito Sans", ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -130,6 +128,8 @@
   --shadow-button: 0 1px 2px 0 rgba(0, 0, 0, 0.12);
   --shadow-modal: 0 4px 8px 0 rgba(0, 0, 0, 0.10);
 }
+
+@variant dark (&:is(.dark *));
 
 html,
 body {
