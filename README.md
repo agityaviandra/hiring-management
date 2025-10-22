@@ -173,7 +173,7 @@ The containerized application can be deployed to any platform that supports Dock
 
 ## Known Limitations
 
-- Please make sure you clear cache your browser if some blank pages appeared
+- Please make sure you clear cache and hard refresh your browser if some blank pages appeared
 - Dont forget to clear all local storage (optional)
 - All role email and password is visible in login page
 ---

@@ -493,7 +493,7 @@ export default function ApplicantJobDetailPage() {
                                                 <FormControl>
                                                     <Input
                                                         type="url"
-                                                        placeholder="https://linkedin.com/in/username"
+                                                        placeholder="https://www.linkedin.com/in/username"
                                                         hasError={!!fieldState.error}
                                                         {...field}
                                                         onChange={(e) => {
@@ -505,7 +505,7 @@ export default function ApplicantJobDetailPage() {
                                                 {/* Info Address Component */}
                                                 {linkedinUrlFound && (
                                                     <div className="flex gap-1 items-center h-5">
-                                                        <img src="/success_link.svg" alt="Success" className="w-8 h-8" />
+                                                        <img src="/success_link.svg" alt="Success" className="w-4 h-4" />
                                                         <p className="text-xs text-primary-main leading-0">
                                                             URL address found
                                                         </p>
@@ -544,7 +544,7 @@ export default function ApplicantJobDetailPage() {
                                 <img
                                     src="/success-state.svg"
                                     alt="Success"
-                                    className="w-32 h-32 mx-auto"
+                                    className="w-40 h-40 sm:w-52 sm:h-52 mx-auto"
                                 />
                             </div>
 
